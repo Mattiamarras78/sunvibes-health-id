@@ -1,0 +1,1914 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SunVibes Health ID</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-512.png">
+<meta name="theme-color" content="#123F35">
+<link rel="stylesheet" href="fonts.css">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg:#F6F1E7; --surface:#FFFFFF; --surface-2:#EFE7D5;
+  --brand-bg:#12213A; --brand-text:#F3EFE3;
+  --text:#16233B; --text-soft:#5B6478;
+  --accent:#1E6E5C; --accent-strong:#123F35; --accent-soft-bg:#DCEAE2;
+  --emergency:#B5222A; --emergency-strong:#8F1B21; --emergency-soft-bg:#F7DBD8;
+  --line:#E1D9C6; --focus:#2F7DE1;
+  --on-accent:#FFFFFF; --on-brand:#F3EFE3;
+  --shadow: 0 1px 2px rgba(18,33,58,.06), 0 8px 24px -12px rgba(18,33,58,.18);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1420; --surface:#161F32; --surface-2:#1E2A42;
+    --brand-bg:#0A1220; --brand-text:#F1ECDE;
+    --text:#ECE8DC; --text-soft:#A8AFC2;
+    --accent:#52C2A2; --accent-strong:#8CDCC4; --accent-soft-bg:rgba(82,194,162,.15);
+    --emergency:#FF7A70; --emergency-strong:#FFA39B; --emergency-soft-bg:rgba(255,122,112,.15);
+    --line:#2A3552; --focus:#7AACFF;
+    --on-accent:#08201A; --on-brand:#F1ECDE;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 28px -12px rgba(0,0,0,.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1420; --surface:#161F32; --surface-2:#1E2A42;
+  --brand-bg:#0A1220; --brand-text:#F1ECDE;
+  --text:#ECE8DC; --text-soft:#A8AFC2;
+  --accent:#52C2A2; --accent-strong:#8CDCC4; --accent-soft-bg:rgba(82,194,162,.15);
+  --emergency:#FF7A70; --emergency-strong:#FFA39B; --emergency-soft-bg:rgba(255,122,112,.15);
+  --line:#2A3552; --focus:#7AACFF;
+  --on-accent:#08201A; --on-brand:#F1ECDE;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 28px -12px rgba(0,0,0,.5);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:'Noto Sans','Noto Sans Arabic','Noto Sans Devanagari','Noto Sans JP','Noto Sans KR','Noto Sans Thai',-apple-system,'Segoe UI',sans-serif;
+  font-size:15px; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.font-display{ font-family:'Fraunces','Georgia',serif; text-wrap:balance; }
+.mono{ font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace; font-variant-numeric:tabular-nums; direction:ltr; unicode-bidi:isolate; }
+[dir="rtl"] .lang-pills, [dir="rtl"] .row, [dir="rtl"] .action-grid, [dir="rtl"] .country-grid, [dir="rtl"] .stat-row, [dir="rtl"] .plans-grid, [dir="rtl"] .grid2{ direction:rtl; }
+[dir="rtl"] .list-item{ flex-direction:row-reverse; }
+[dir="rtl"] .idcard-meta{ flex-direction:row-reverse; }
+[dir="rtl"] .chip-remove{ margin-right:4px; }
+a{ color:inherit }
+button{ font:inherit; color:inherit; }
+input,select,textarea{ font:inherit; color:inherit; font-size:16px; }
+::selection{ background:var(--accent-soft-bg); }
+:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+@media (prefers-reduced-motion: reduce){ *{ animation-duration:.001ms !important; transition-duration:.001ms !important; } }
+
+/* ============ LAYOUT SHELL ============ */
+#root{ min-height:100vh; }
+.shell{
+  display:grid;
+  grid-template-columns: 232px 1fr;
+  grid-template-rows: 1fr;
+  min-height:100vh;
+}
+.sidebar{
+  background:var(--brand-bg); color:var(--on-brand);
+  padding:22px 16px; display:flex; flex-direction:column; gap:28px;
+  position:sticky; top:0; height:100vh;
+}
+.brand{ display:flex; align-items:center; gap:10px; padding:0 6px; }
+.brand-mark{
+  width:34px; height:34px; border-radius:9px; background:var(--accent); overflow:hidden;
+  display:flex; align-items:center; justify-content:center; font-size:16px; flex:none;
+}
+.brand-name{ font-family:'Fraunces',serif; font-weight:600; font-size:1.05rem; letter-spacing:.01em; line-height:1.15; }
+.brand-sub{ font-size:.68rem; color:rgba(243,239,227,.6); letter-spacing:.06em; text-transform:uppercase; margin-top:2px;}
+.navgroup{ display:flex; flex-direction:column; gap:2px; }
+.navlink{
+  display:flex; align-items:center; gap:11px; padding:10px 12px; border-radius:9px;
+  background:transparent; border:none; text-align:left; cursor:pointer; width:100%;
+  color:rgba(243,239,227,.72); font-size:.86rem; font-weight:500;
+}
+.navlink .ic{ width:18px; text-align:center; font-size:1rem; }
+.navlink:hover{ background:rgba(243,239,227,.06); color:var(--on-brand); }
+.navlink.active{ background:rgba(243,239,227,.1); color:var(--on-brand); }
+.navlink.active .ic{ color:var(--accent-strong); }
+.sidebar-foot{ margin-top:auto; display:flex; flex-direction:column; gap:10px; }
+.sos-btn{
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  background:var(--emergency); color:#fff; border:none; border-radius:11px;
+  padding:13px 12px; font-weight:700; font-size:.86rem; letter-spacing:.02em; cursor:pointer;
+  box-shadow:0 6px 18px -6px rgba(181,34,42,.55);
+}
+.sos-btn:hover{ background:var(--emergency-strong); }
+.sidebar-mini{ font-size:.68rem; color:rgba(243,239,227,.45); padding:0 6px; }
+.sidebar-mini button{ background:none;border:none;color:rgba(243,239,227,.6); text-decoration:underline; cursor:pointer; padding:0; font-size:.68rem; }
+
+.main{ display:flex; flex-direction:column; min-width:0; }
+.topbar{
+  display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  padding:16px 28px; border-bottom:1px solid var(--line); background:var(--bg);
+  position:sticky; top:0; z-index:5;
+}
+.topbar-title{ font-family:'Fraunces',serif; font-weight:600; font-size:1.3rem; }
+.topbar-sub{ color:var(--text-soft); font-size:.82rem; margin-top:1px; }
+.lang-pills{ display:flex; flex-wrap:wrap; gap:4px; background:var(--surface-2); padding:3px; border-radius:99px; border:1px solid var(--line); max-width:100%; }
+.lang-pill{
+  border:none; background:transparent; padding:5px 8px; border-radius:99px; font-size:1.05rem; line-height:1; font-weight:600;
+  cursor:pointer; color:var(--text-soft); white-space:nowrap;
+}
+.lang-pill.active{ background:var(--surface); box-shadow:0 0 0 2px var(--accent) inset; }
+.lang-select{
+  background:var(--surface-2); border:1px solid var(--line); border-radius:99px;
+  padding:8px 14px; font-size:16px; font-weight:600; color:var(--text);
+  cursor:pointer; max-width:180px; appearance:auto;
+}
+@media (max-width:860px){ .lang-select{ max-width:150px; } }
+.view{ padding:26px 28px 64px; max-width:920px; }
+
+/* bottom tab bar (narrow) */
+.bottombar{ display:none; }
+
+@media (max-width: 860px){
+  .shell{ grid-template-columns: 1fr; }
+  .sidebar{ display:none; }
+  .view{ padding:18px 16px 96px; }
+  .topbar{ padding:14px 16px; }
+  .bottombar{
+    display:flex; position:fixed; bottom:0; left:0; right:0; z-index:20;
+    background:var(--brand-bg); border-top:1px solid rgba(0,0,0,.2);
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+    justify-content:space-around;
+  }
+  .bottombar button{
+    background:none; border:none; color:rgba(243,239,227,.6); display:flex; flex-direction:column;
+    align-items:center; gap:3px; font-size:.62rem; font-weight:600; cursor:pointer; padding:4px 6px; flex:1;
+  }
+  .bottombar button .ic{ font-size:1.15rem; }
+  .bottombar button.active{ color:var(--on-brand); }
+  .bottombar button.active .ic{ color:var(--accent-strong); }
+  .bottombar button.emergency{ color:var(--emergency); }
+  .bottombar button.emergency .ic{ color:var(--emergency); }
+}
+
+/* ============ COMPONENTS ============ */
+.eyebrow{ font-size:.7rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); }
+.card{ background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:20px; box-shadow:var(--shadow); }
+.card + .card{ margin-top:16px; }
+.section-head{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:14px;}
+.section-head h2{ font-size:1.02rem; margin:0; font-weight:600; }
+.grid2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+@media (max-width:560px){ .grid2{ grid-template-columns:1fr; } }
+.field{ display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+.field label{ font-size:.74rem; font-weight:600; color:var(--text-soft); }
+.field input[type=text], .field input[type=tel], .field input[type=number], .field select, .field textarea{
+  background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:10px 12px;
+  font-size:1rem; color:var(--text); width:100%;
+}
+.field textarea{ resize:vertical; min-height:64px; }
+.hint{ font-size:.72rem; color:var(--text-soft); }
+.row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer;
+  border-radius:10px; padding:10px 16px; font-size:.86rem; font-weight:600; border:1px solid transparent;
+}
+.btn-primary{ background:var(--accent); color:var(--on-accent); }
+.btn-primary:hover{ background:var(--accent-strong); }
+.btn-ghost{ background:transparent; border-color:var(--line); color:var(--text); }
+.btn-ghost:hover{ background:var(--surface-2); }
+.btn-emergency{ background:var(--emergency); color:#fff; }
+.btn-emergency:hover{ background:var(--emergency-strong); }
+.btn-sm{ padding:6px 11px; font-size:.76rem; border-radius:8px; }
+.btn-block{ width:100%; }
+.btn[disabled]{ opacity:.5; cursor:not-allowed; }
+.chip{
+  display:inline-flex; align-items:center; gap:6px; padding:7px 12px; border-radius:99px;
+  background:var(--surface-2); border:1px solid var(--line); font-size:.8rem; cursor:pointer; color:var(--text);
+}
+.chip.selected{ background:var(--accent-soft-bg); border-color:var(--accent); color:var(--accent-strong); font-weight:600; }
+.chip-remove{ background:none;border:none;color:inherit;cursor:pointer;padding:0;font-size:.9em;opacity:.7; }
+.badge{ display:inline-flex; align-items:center; gap:5px; font-size:.66rem; font-weight:700; letter-spacing:.03em; text-transform:uppercase; padding:3px 8px; border-radius:99px; background:var(--accent-soft-bg); color:var(--accent-strong); }
+.badge-warn{ background:var(--emergency-soft-bg); color:var(--emergency-strong); }
+.stamp{ font-size:.62rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--text-soft); border:1px solid var(--line); border-radius:6px; padding:2px 6px; }
+.empty{ text-align:center; padding:36px 20px; color:var(--text-soft); }
+.empty .ic{ font-size:1.8rem; margin-bottom:8px; }
+.disclaimer{ font-size:.74rem; color:var(--text-soft); background:var(--surface-2); border:1px solid var(--line); border-radius:10px; padding:10px 13px; line-height:1.5; }
+.list-item{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:11px 0; border-top:1px solid var(--line); }
+.list-item:first-child{ border-top:none; }
+.saved-flag{ font-size:.72rem; color:var(--accent); font-weight:600; opacity:0; transition:opacity .3s; }
+.saved-flag.show{ opacity:1; }
+
+/* ID card */
+.idcard{
+  background:linear-gradient(155deg, var(--brand-bg), #1B3358 65%, var(--accent-strong));
+  color:var(--on-brand); border-radius:18px; padding:24px; position:relative; overflow:hidden;
+}
+.idcard::after{ content:""; position:absolute; inset:0; background:radial-gradient(420px 220px at 100% 0%, rgba(255,255,255,.08), transparent 70%); pointer-events:none;}
+.idcard-top{ display:flex; justify-content:space-between; align-items:flex-start; }
+.idcard-brand{ font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; opacity:.7; }
+.idcard-flag{ font-size:1.4rem; }
+.idcard-name{ font-family:'Fraunces',serif; font-size:1.5rem; font-weight:600; margin-top:16px; }
+.idcard-id{ font-family:'IBM Plex Mono',monospace; font-size:.74rem; opacity:.65; margin-top:2px; letter-spacing:.03em;}
+.idcard-meta{ display:flex; gap:26px; margin-top:20px; }
+.idcard-meta div div:first-child{ font-size:.64rem; text-transform:uppercase; letter-spacing:.06em; opacity:.6; }
+.idcard-meta div div:last-child{ font-family:'IBM Plex Mono',monospace; font-size:1.05rem; margin-top:2px; }
+
+.progress-track{ height:6px; border-radius:99px; background:var(--surface-2); overflow:hidden; }
+.progress-fill{ height:100%; background:var(--accent); border-radius:99px; }
+.stat-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.stat-box{ background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px; }
+.stat-num{ font-family:'Fraunces',serif; font-size:1.5rem; font-weight:600; }
+.stat-label{ font-size:.7rem; color:var(--text-soft); text-transform:uppercase; letter-spacing:.05em; margin-top:2px; }
+@media (max-width:560px){ .stat-row{ grid-template-columns:1fr 1fr; } }
+
+/* Country grid */
+.country-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; }
+.country-card{
+  background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px;
+  display:flex; align-items:center; gap:10px; cursor:pointer; text-align:left;
+}
+.country-card:hover{ border-color:var(--accent); }
+.country-card.active{ border-color:var(--accent); background:var(--accent-soft-bg); }
+.country-card .flag{ font-size:1.5rem; }
+.country-card .name{ font-weight:600; font-size:.86rem; }
+.country-card .code{ font-size:.68rem; color:var(--text-soft); }
+
+.action-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+@media (max-width:560px){ .action-grid{ grid-template-columns:repeat(2,1fr); } }
+.action-btn{
+  display:flex; flex-direction:column; align-items:center; gap:8px; padding:16px 8px;
+  background:var(--surface); border:1px solid var(--line); border-radius:12px; cursor:pointer; text-align:center;
+}
+.action-btn:hover{ border-color:var(--accent); }
+.action-btn .ic{ font-size:1.3rem; }
+.action-btn .lbl{ font-size:.74rem; font-weight:600; }
+.action-btn.emergency{ background:var(--emergency-soft-bg); border-color:var(--emergency); }
+.action-btn.emergency .lbl{ color:var(--emergency-strong); }
+
+/* Plans */
+.plans-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+@media (max-width:640px){ .plans-grid{ grid-template-columns:1fr; } }
+.plan-card{ border:1px solid var(--line); border-radius:16px; padding:22px; background:var(--surface); }
+.plan-card.pro{ border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft-bg); }
+.plan-price{ font-family:'Fraunces',serif; font-size:2rem; font-weight:600; margin:6px 0 2px; }
+.plan-list{ list-style:none; margin:16px 0 0; padding:0; display:flex; flex-direction:column; gap:9px; }
+.plan-list li{ display:flex; gap:8px; font-size:.84rem; align-items:flex-start; }
+.plan-list li::before{ content:"✓"; color:var(--accent); font-weight:700; flex:none; }
+
+/* ============ EMERGENCY (fixed theme, always legible) ============ */
+.emergency-screen{
+  position:fixed; inset:0; z-index:100; background:#FFFFFF; color:#1A1A1A; overflow-y:auto;
+  font-family:'Noto Sans','Noto Sans Arabic','Noto Sans Devanagari','Noto Sans JP','Noto Sans KR','Noto Sans Thai',sans-serif;
+}
+.emergency-topbar{ display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:3px solid var(--emergency); }
+.emergency-close{ background:none;border:1px solid #ccc;border-radius:8px;padding:7px 12px;cursor:pointer;font-size:.8rem;color:#1A1A1A; }
+.emergency-langs{ display:flex; flex-wrap:wrap; gap:6px; max-width:60%; justify-content:flex-end; }
+.emergency-langs button{ border:2px solid var(--emergency); background:#fff; color:var(--emergency); font-weight:700; border-radius:8px; padding:4px 8px; font-size:1.05rem; line-height:1; cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:2px; }
+.emergency-langs button.active{ background:#fff; box-shadow:0 0 0 3px var(--emergency) inset; }
+.emergency-langs button.locked{ opacity:.55; border-style:dashed; }
+.emergency-langs .lockdot{ font-size:.68rem; }
+.emergency-planhint{ margin:0; padding:8px 18px; background:#fff4f4; border-bottom:1px solid var(--emergency); color:#7a1f1f; font-size:.76rem; text-align:right; }
+.emergency-planhint a{ color:#7a1f1f; font-weight:700; text-decoration:underline; }
+.emergency-members{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; padding:10px 18px; border-bottom:1px solid var(--line); }
+.member-pill{ border:1px solid var(--emergency); background:#fff; color:var(--emergency); font-weight:600; border-radius:99px; padding:4px 12px; font-size:.76rem; cursor:pointer; }
+.member-pill.active{ background:var(--emergency); color:#fff; }
+.emergency-body{ padding:20px 20px 60px; max-width:640px; margin:0 auto; }
+.emergency-name{ font-family:'Fraunces',serif; font-size:2rem; font-weight:700; }
+.emergency-flagrow{ display:flex; align-items:center; gap:8px; color:#555; font-size:.92rem; margin-top:4px; }
+.ealert{ background:var(--emergency); color:#fff; border-radius:12px; padding:16px 18px; margin-top:18px; }
+.ealert .k{ font-size:.68rem; text-transform:uppercase; letter-spacing:.08em; opacity:.85; }
+.ealert .v{ font-family:'Fraunces',serif; font-size:1.7rem; font-weight:700; margin-top:2px; }
+.eblock{ margin-top:16px; border:1.5px solid #c2c2c2; border-radius:12px; padding:15px 17px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+.eblock .k{ font-size:.7rem; text-transform:uppercase; letter-spacing:.07em; color:#8a8a8a; font-weight:700; }
+.eblock .v{ font-size:1.05rem; margin-top:5px; line-height:1.5; }
+.eblock .v.empty{ color:#aaa; font-style:italic; }
+.etag{ display:inline-block; background:#FBEAEA; color:var(--emergency-strong,#8F1B21); border-radius:99px; padding:4px 10px; font-size:.82rem; font-weight:600; margin:3px 6px 0 0; }
+.ecall{ display:inline-flex; align-items:center; gap:8px; background:var(--emergency); color:#fff; border-radius:10px; padding:11px 16px; font-weight:700; text-decoration:none; margin-top:8px; font-size:.9rem; }
+.qr-wrap{ display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:22px; padding:18px; border:1px dashed #ccc; border-radius:12px; }
+.qr-wrap #qrcanvas{ background:#fff; padding:8px; border-radius:8px; }
+.print-actions{ display:flex; justify-content:center; margin-top:18px; }
+.print-actions .btn{ border:1px solid #ccc; background:#fff; color:#1A1A1A; }
+.print-footer{ display:none; }
+
+/* Print / export as PDF — only .emergency-screen content is visible, one clean page */
+@media print{
+  html, body{ background:#fff !important; }
+  body *{ visibility:hidden; }
+  .emergency-screen, .emergency-screen *{ visibility:visible; }
+  .emergency-screen{ position:absolute; top:0; left:0; right:0; bottom:auto; height:auto; overflow:visible; background:#fff; }
+  .no-print{ display:none !important; }
+  .emergency-body{ max-width:100%; padding:0 8px; }
+  .eblock{ break-inside:avoid; }
+  .ealert{ break-inside:avoid; }
+  .print-footer{ display:block; margin-top:16px; padding-top:10px; border-top:1px solid #ccc; font-size:.72rem; color:#666; }
+}
+
+/* Toast */
+#toast{ position:fixed; bottom:18px; left:50%; transform:translate(-50%,12px); background:var(--brand-bg); color:var(--on-brand); padding:10px 18px; border-radius:99px; font-size:.82rem; opacity:0; pointer-events:none; transition:all .25s; z-index:200; box-shadow:var(--shadow); }
+#toast.show{ opacity:1; transform:translate(-50%,0); }
+</style>
+
+<script>
+/* qrcodejs v1.0.0 (MIT License, davidshimjs) — inlined instead of loaded from a CDN. Loading it from cdn.jsdelivr.net inside the published artifact's sandboxed iframe was silently failing (typeof QRCode stayed "undefined"), so the QR button always fell back to the unavailable message. Inlining removes that external network dependency entirely. */
+var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this.parsedData=[];for(var b,d=0,e=this.data.length;e>d;d++){b=[];var f=this.data.charCodeAt(d);f>65536?(b[0]=240|(1835008&f)>>>18,b[1]=128|(258048&f)>>>12,b[2]=128|(4032&f)>>>6,b[3]=128|63&f):f>2048?(b[0]=224|(61440&f)>>>12,b[1]=128|(4032&f)>>>6,b[2]=128|63&f):f>128?(b[0]=192|(1984&f)>>>6,b[1]=128|63&f):b[0]=f,this.parsedData=this.parsedData.concat(b)}this.parsedData.length!=this.data.length&&(this.parsedData.unshift(191),this.parsedData.unshift(187),this.parsedData.unshift(239))}function b(a,b){this.typeNumber=a,this.errorCorrectLevel=b,this.modules=null,this.moduleCount=0,this.dataCache=null,this.dataList=[]}function i(a,b){if(void 0==a.length)throw new Error(a.length+"/"+b);for(var c=0;c<a.length&&0==a[c];)c++;this.num=new Array(a.length-c+b);for(var d=0;d<a.length-c;d++)this.num[d]=a[d+c]}function j(a,b){this.totalCount=a,this.dataCount=b}function k(){this.buffer=[],this.length=0}function m(){return"undefined"!=typeof CanvasRenderingContext2D}function n(){var a=!1,b=navigator.userAgent;return/android/i.test(b)&&(a=!0,aMat=b.toString().match(/android ([0-9]\.[0-9])/i),aMat&&aMat[1]&&(a=parseFloat(aMat[1]))),a}function r(a,b){for(var c=1,e=s(a),f=0,g=l.length;g>=f;f++){var h=0;switch(b){case d.L:h=l[f][0];break;case d.M:h=l[f][1];break;case d.Q:h=l[f][2];break;case d.H:h=l[f][3]}if(h>=e)break;c++}if(c>l.length)throw new Error("Too long data");return c}function s(a){return new TextEncoder().encode(a).length}a.prototype={getLength:function(){return this.parsedData.length},write:function(a){for(var b=0,c=this.parsedData.length;c>b;b++)a.put(this.parsedData[b],8)}},b.prototype={addData:function(b){var c=new a(b);this.dataList.push(c),this.dataCache=null},isDark:function(a,b){if(0>a||this.moduleCount<=a||0>b||this.moduleCount<=b)throw new Error(a+","+b);return this.modules[a][b]},getModuleCount:function(){return this.moduleCount},make:function(){this.makeImpl(!1,this.getBestMaskPattern())},makeImpl:function(a,c){this.moduleCount=4*this.typeNumber+17,this.modules=new Array(this.moduleCount);for(var d=0;d<this.moduleCount;d++){this.modules[d]=new Array(this.moduleCount);for(var e=0;e<this.moduleCount;e++)this.modules[d][e]=null}this.setupPositionProbePattern(0,0),this.setupPositionProbePattern(this.moduleCount-7,0),this.setupPositionProbePattern(0,this.moduleCount-7),this.setupPositionAdjustPattern(),this.setupTimingPattern(),this.setupTypeInfo(a,c),this.typeNumber>=7&&this.setupTypeNumber(a),null==this.dataCache&&(this.dataCache=b.createData(this.typeNumber,this.errorCorrectLevel,this.dataList)),this.mapData(this.dataCache,c)},setupPositionProbePattern:function(a,b){for(var c=-1;7>=c;c++)if(!(-1>=a+c||this.moduleCount<=a+c))for(var d=-1;7>=d;d++)-1>=b+d||this.moduleCount<=b+d||(this.modules[a+c][b+d]=c>=0&&6>=c&&(0==d||6==d)||d>=0&&6>=d&&(0==c||6==c)||c>=2&&4>=c&&d>=2&&4>=d?!0:!1)},getBestMaskPattern:function(){for(var a=0,b=0,c=0;8>c;c++){this.makeImpl(!0,c);var d=f.getLostPoint(this);(0==c||a>d)&&(a=d,b=c)}return b},createMovieClip:function(a,b,c){var d=a.createEmptyMovieClip(b,c),e=1;this.make();for(var f=0;f<this.modules.length;f++)for(var g=f*e,h=0;h<this.modules[f].length;h++){var i=h*e,j=this.modules[f][h];j&&(d.beginFill(0,100),d.moveTo(i,g),d.lineTo(i+e,g),d.lineTo(i+e,g+e),d.lineTo(i,g+e),d.endFill())}return d},setupTimingPattern:function(){for(var a=8;a<this.moduleCount-8;a++)null==this.modules[a][6]&&(this.modules[a][6]=0==a%2);for(var b=8;b<this.moduleCount-8;b++)null==this.modules[6][b]&&(this.modules[6][b]=0==b%2)},setupPositionAdjustPattern:function(){for(var a=f.getPatternPosition(this.typeNumber),b=0;b<a.length;b++)for(var c=0;c<a.length;c++){var d=a[b],e=a[c];if(null==this.modules[d][e])for(var g=-2;2>=g;g++)for(var h=-2;2>=h;h++)this.modules[d+g][e+h]=-2==g||2==g||-2==h||2==h||0==g&&0==h?!0:!1}},setupTypeNumber:function(a){for(var b=f.getBCHTypeNumber(this.typeNumber),c=0;18>c;c++){var d=!a&&1==(1&b>>c);this.modules[Math.floor(c/3)][c%3+this.moduleCount-8-3]=d}for(var c=0;18>c;c++){var d=!a&&1==(1&b>>c);this.modules[c%3+this.moduleCount-8-3][Math.floor(c/3)]=d}},setupTypeInfo:function(a,b){for(var c=this.errorCorrectLevel<<3|b,d=f.getBCHTypeInfo(c),e=0;15>e;e++){var g=!a&&1==(1&d>>e);6>e?this.modules[e][8]=g:8>e?this.modules[e+1][8]=g:this.modules[this.moduleCount-15+e][8]=g}for(var e=0;15>e;e++){var g=!a&&1==(1&d>>e);8>e?this.modules[8][this.moduleCount-e-1]=g:9>e?this.modules[8][15-e-1+1]=g:this.modules[8][15-e-1]=g}this.modules[this.moduleCount-8][8]=!a},mapData:function(a,b){for(var c=-1,d=this.moduleCount-1,e=7,g=0,h=this.moduleCount-1;h>0;h-=2)for(6==h&&h--;;){for(var i=0;2>i;i++)if(null==this.modules[d][h-i]){var j=!1;g<a.length&&(j=1==(1&a[g]>>>e));var k=f.getMask(b,d,h-i);k&&(j=!j),this.modules[d][h-i]=j,e--,-1==e&&(g++,e=7)}if(d+=c,0>d||this.moduleCount<=d){d-=c,c=-c;break}}}},b.PAD0=236,b.PAD1=17,b.createData=function(a,c,d){for(var e=j.getRSBlocks(a,c),g=new k,h=0;h<d.length;h++){var i=d[h];g.put(i.mode,4),g.put(i.getLength(),f.getLengthInBits(i.mode,a)),i.write(g)}for(var l=0,h=0;h<e.length;h++)l+=e[h].dataCount;if(g.getLengthInBits()>8*l)throw new Error("code length overflow. ("+g.getLengthInBits()+">"+8*l+")");for(g.getLengthInBits()+4<=8*l&&g.put(0,4);0!=g.getLengthInBits()%8;)g.putBit(!1);for(;;){if(g.getLengthInBits()>=8*l)break;if(g.put(b.PAD0,8),g.getLengthInBits()>=8*l)break;g.put(b.PAD1,8)}return b.createBytes(g,e)},b.createBytes=function(a,b){for(var c=0,d=0,e=0,g=new Array(b.length),h=new Array(b.length),j=0;j<b.length;j++){var k=b[j].dataCount,l=b[j].totalCount-k;d=Math.max(d,k),e=Math.max(e,l),g[j]=new Array(k);for(var m=0;m<g[j].length;m++)g[j][m]=255&a.buffer[m+c];c+=k;var n=f.getErrorCorrectPolynomial(l),o=new i(g[j],n.getLength()-1),p=o.mod(n);h[j]=new Array(n.getLength()-1);for(var m=0;m<h[j].length;m++){var q=m+p.getLength()-h[j].length;h[j][m]=q>=0?p.get(q):0}}for(var r=0,m=0;m<b.length;m++)r+=b[m].totalCount;for(var s=new Array(r),t=0,m=0;d>m;m++)for(var j=0;j<b.length;j++)m<g[j].length&&(s[t++]=g[j][m]);for(var m=0;e>m;m++)for(var j=0;j<b.length;j++)m<h[j].length&&(s[t++]=h[j][m]);return s};for(var c={MODE_NUMBER:1,MODE_ALPHA_NUM:2,MODE_8BIT_BYTE:4,MODE_KANJI:8},d={L:1,M:0,Q:3,H:2},e={PATTERN000:0,PATTERN001:1,PATTERN010:2,PATTERN011:3,PATTERN100:4,PATTERN101:5,PATTERN110:6,PATTERN111:7},f={PATTERN_POSITION_TABLE:[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],G15:1335,G18:7973,G15_MASK:21522,getBCHTypeInfo:function(a){for(var b=a<<10;f.getBCHDigit(b)-f.getBCHDigit(f.G15)>=0;)b^=f.G15<<f.getBCHDigit(b)-f.getBCHDigit(f.G15);return(a<<10|b)^f.G15_MASK},getBCHTypeNumber:function(a){for(var b=a<<12;f.getBCHDigit(b)-f.getBCHDigit(f.G18)>=0;)b^=f.G18<<f.getBCHDigit(b)-f.getBCHDigit(f.G18);return a<<12|b},getBCHDigit:function(a){for(var b=0;0!=a;)b++,a>>>=1;return b},getPatternPosition:function(a){return f.PATTERN_POSITION_TABLE[a-1]},getMask:function(a,b,c){switch(a){case e.PATTERN000:return 0==(b+c)%2;case e.PATTERN001:return 0==b%2;case e.PATTERN010:return 0==c%3;case e.PATTERN011:return 0==(b+c)%3;case e.PATTERN100:return 0==(Math.floor(b/2)+Math.floor(c/3))%2;case e.PATTERN101:return 0==b*c%2+b*c%3;case e.PATTERN110:return 0==(b*c%2+b*c%3)%2;case e.PATTERN111:return 0==(b*c%3+(b+c)%2)%2;default:throw new Error("bad maskPattern:"+a)}},getErrorCorrectPolynomial:function(a){for(var b=new i([1],0),c=0;a>c;c++)b=b.multiply(new i([1,g.gexp(c)],0));return b},getLengthInBits:function(a,b){if(b>=1&&10>b)switch(a){case c.MODE_NUMBER:return 10;case c.MODE_ALPHA_NUM:return 9;case c.MODE_8BIT_BYTE:return 8;case c.MODE_KANJI:return 8;default:throw new Error("mode:"+a)}else if(27>b)switch(a){case c.MODE_NUMBER:return 12;case c.MODE_ALPHA_NUM:return 11;case c.MODE_8BIT_BYTE:return 16;case c.MODE_KANJI:return 10;default:throw new Error("mode:"+a)}else{if(!(41>b))throw new Error("type:"+b);switch(a){case c.MODE_NUMBER:return 14;case c.MODE_ALPHA_NUM:return 13;case c.MODE_8BIT_BYTE:return 16;case c.MODE_KANJI:return 12;default:throw new Error("mode:"+a)}}},getLostPoint:function(a){for(var b=a.getModuleCount(),c=0,d=0;b>d;d++)for(var e=0;b>e;e++){for(var f=0,g=a.isDark(d,e),h=-1;1>=h;h++)if(!(0>d+h||d+h>=b))for(var i=-1;1>=i;i++)0>e+i||e+i>=b||(0!=h||0!=i)&&g==a.isDark(d+h,e+i)&&f++;f>5&&(c+=3+f-5)}for(var d=0;b-1>d;d++)for(var e=0;b-1>e;e++){var j=0;a.isDark(d,e)&&j++,a.isDark(d+1,e)&&j++,a.isDark(d,e+1)&&j++,a.isDark(d+1,e+1)&&j++,(0==j||4==j)&&(c+=3)}for(var d=0;b>d;d++)for(var e=0;b-6>e;e++)a.isDark(d,e)&&!a.isDark(d,e+1)&&a.isDark(d,e+2)&&a.isDark(d,e+3)&&a.isDark(d,e+4)&&!a.isDark(d,e+5)&&a.isDark(d,e+6)&&(c+=40);for(var e=0;b>e;e++)for(var d=0;b-6>d;d++)a.isDark(d,e)&&!a.isDark(d+1,e)&&a.isDark(d+2,e)&&a.isDark(d+3,e)&&a.isDark(d+4,e)&&!a.isDark(d+5,e)&&a.isDark(d+6,e)&&(c+=40);for(var k=0,e=0;b>e;e++)for(var d=0;b>d;d++)a.isDark(d,e)&&k++;var l=Math.abs(100*k/b/b-50)/5;return c+=10*l}},g={glog:function(a){if(1>a)throw new Error("glog("+a+")");return g.LOG_TABLE[a]},gexp:function(a){for(;0>a;)a+=255;for(;a>=256;)a-=255;return g.EXP_TABLE[a]},EXP_TABLE:new Array(256),LOG_TABLE:new Array(256)},h=0;8>h;h++)g.EXP_TABLE[h]=1<<h;for(var h=8;256>h;h++)g.EXP_TABLE[h]=g.EXP_TABLE[h-4]^g.EXP_TABLE[h-5]^g.EXP_TABLE[h-6]^g.EXP_TABLE[h-8];for(var h=0;255>h;h++)g.LOG_TABLE[g.EXP_TABLE[h]]=h;i.prototype={get:function(a){return this.num[a]},getLength:function(){return this.num.length},multiply:function(a){for(var b=new Array(this.getLength()+a.getLength()-1),c=0;c<this.getLength();c++)for(var d=0;d<a.getLength();d++)b[c+d]^=g.gexp(g.glog(this.get(c))+g.glog(a.get(d)));return new i(b,0)},mod:function(a){if(this.getLength()-a.getLength()<0)return this;for(var b=g.glog(this.get(0))-g.glog(a.get(0)),c=new Array(this.getLength()),d=0;d<this.getLength();d++)c[d]=this.get(d);for(var d=0;d<a.getLength();d++)c[d]^=g.gexp(g.glog(a.get(d))+b);return new i(c,0).mod(a)}},j.RS_BLOCK_TABLE=[[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],[2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],[4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],[2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],[4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],[3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],[5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12],[5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],[1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],[5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],[3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],[3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],[4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],[2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],[4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],[6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],[8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],[10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],[8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],[3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],[7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],[5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],[13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],[17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],[17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],[13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],[12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],[6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],[17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],[4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],[20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],[19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]],j.getRSBlocks=function(a,b){var c=j.getRsBlockTable(a,b);if(void 0==c)throw new Error("bad rs block @ typeNumber:"+a+"/errorCorrectLevel:"+b);for(var d=c.length/3,e=[],f=0;d>f;f++)for(var g=c[3*f+0],h=c[3*f+1],i=c[3*f+2],k=0;g>k;k++)e.push(new j(h,i));return e},j.getRsBlockTable=function(a,b){switch(b){case d.L:return j.RS_BLOCK_TABLE[4*(a-1)+0];case d.M:return j.RS_BLOCK_TABLE[4*(a-1)+1];case d.Q:return j.RS_BLOCK_TABLE[4*(a-1)+2];case d.H:return j.RS_BLOCK_TABLE[4*(a-1)+3];default:return void 0}},k.prototype={get:function(a){var b=Math.floor(a/8);return 1==(1&this.buffer[b]>>>7-a%8)},put:function(a,b){for(var c=0;b>c;c++)this.putBit(1==(1&a>>>b-c-1))},getLengthInBits:function(){return this.length},putBit:function(a){var b=Math.floor(this.length/8);this.buffer.length<=b&&this.buffer.push(0),a&&(this.buffer[b]|=128>>>this.length%8),this.length++}};var l=[[17,14,11,7],[32,26,20,14],[53,42,32,24],[78,62,46,34],[106,84,60,44],[134,106,74,58],[154,122,86,64],[192,152,108,84],[230,180,130,98],[271,213,151,119],[321,251,177,137],[367,287,203,155],[425,331,241,177],[458,362,258,194],[520,412,292,220],[586,450,322,250],[644,504,364,280],[718,560,394,310],[792,624,442,338],[858,666,482,382],[929,711,509,403],[1003,779,565,439],[1091,857,611,461],[1171,911,661,511],[1273,997,715,535],[1367,1059,751,593],[1465,1125,805,625],[1528,1190,868,658],[1628,1264,908,698],[1732,1370,982,742],[1840,1452,1030,790],[1952,1538,1112,842],[2068,1628,1168,898],[2188,1722,1228,958],[2303,1809,1283,983],[2431,1911,1351,1051],[2563,1989,1423,1093],[2699,2099,1499,1139],[2809,2213,1579,1219],[2953,2331,1663,1273]],o=function(){var a=function(a,b){this._el=a,this._htOption=b};return a.prototype.draw=function(a){function g(a,b){var c=document.createElementNS("http://www.w3.org/2000/svg",a);for(var d in b)b.hasOwnProperty(d)&&c.setAttribute(d,b[d]);return c}var b=this._htOption,c=this._el,d=a.getModuleCount();Math.floor(b.width/d),Math.floor(b.height/d),this.clear();var h=g("svg",{viewBox:"0 0 "+String(d)+" "+String(d),width:"100%",height:"100%",fill:b.colorLight});h.setAttributeNS("http://www.w3.org/2000/xmlns/","xmlns:xlink","http://www.w3.org/1999/xlink"),c.appendChild(h),h.appendChild(g("rect",{fill:b.colorDark,width:"1",height:"1",id:"template"}));for(var i=0;d>i;i++)for(var j=0;d>j;j++)if(a.isDark(i,j)){var k=g("use",{x:String(i),y:String(j)});k.setAttributeNS("http://www.w3.org/1999/xlink","href","#template"),h.appendChild(k)}},a.prototype.clear=function(){for(;this._el.hasChildNodes();)this._el.removeChild(this._el.lastChild)},a}(),p="svg"===document.documentElement.tagName.toLowerCase(),q=p?o:m()?function(){function a(){this._elImage.src=this._elCanvas.toDataURL("image/png"),this._elImage.style.display="block",this._elCanvas.style.display="none"}function d(a,b){var c=this;if(c._fFail=b,c._fSuccess=a,null===c._bSupportDataURI){var d=document.createElement("img"),e=function(){c._bSupportDataURI=!1,c._fFail&&_fFail.call(c)},f=function(){c._bSupportDataURI=!0,c._fSuccess&&c._fSuccess.call(c)};return d.onabort=e,d.onerror=e,d.onload=f,d.src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==",void 0}c._bSupportDataURI===!0&&c._fSuccess?c._fSuccess.call(c):c._bSupportDataURI===!1&&c._fFail&&c._fFail.call(c)}if(this._android&&this._android<=2.1){var b=1/window.devicePixelRatio,c=CanvasRenderingContext2D.prototype.drawImage;CanvasRenderingContext2D.prototype.drawImage=function(a,d,e,f,g,h,i,j){if("nodeName"in a&&/img/i.test(a.nodeName))for(var l=arguments.length-1;l>=1;l--)arguments[l]=arguments[l]*b;else"undefined"==typeof j&&(arguments[1]*=b,arguments[2]*=b,arguments[3]*=b,arguments[4]*=b);c.apply(this,arguments)}}var e=function(a,b){this._bIsPainted=!1,this._android=n(),this._htOption=b,this._elCanvas=document.createElement("canvas"),this._elCanvas.width=b.width,this._elCanvas.height=b.height,a.appendChild(this._elCanvas),this._el=a,this._oContext=this._elCanvas.getContext("2d"),this._bIsPainted=!1,this._elImage=document.createElement("img"),this._elImage.style.display="none",this._el.appendChild(this._elImage),this._bSupportDataURI=null};return e.prototype.draw=function(a){var b=this._elImage,c=this._oContext,d=this._htOption,e=a.getModuleCount(),f=d.width/e,g=d.height/e,h=Math.round(f),i=Math.round(g);b.style.display="none",this.clear();for(var j=0;e>j;j++)for(var k=0;e>k;k++){var l=a.isDark(j,k),m=k*f,n=j*g;c.strokeStyle=l?d.colorDark:d.colorLight,c.lineWidth=1,c.fillStyle=l?d.colorDark:d.colorLight,c.fillRect(m,n,f,g),c.strokeRect(Math.floor(m)+.5,Math.floor(n)+.5,h,i),c.strokeRect(Math.ceil(m)-.5,Math.ceil(n)-.5,h,i)}this._bIsPainted=!0},e.prototype.makeImage=function(){this._bIsPainted&&d.call(this,a)},e.prototype.isPainted=function(){return this._bIsPainted},e.prototype.clear=function(){this._oContext.clearRect(0,0,this._elCanvas.width,this._elCanvas.height),this._bIsPainted=!1},e.prototype.round=function(a){return a?Math.floor(1e3*a)/1e3:a},e}():function(){var a=function(a,b){this._el=a,this._htOption=b};return a.prototype.draw=function(a){for(var b=this._htOption,c=this._el,d=a.getModuleCount(),e=Math.floor(b.width/d),f=Math.floor(b.height/d),g=['<table style="border:0;border-collapse:collapse;">'],h=0;d>h;h++){g.push("<tr>");for(var i=0;d>i;i++)g.push('<td style="border:0;border-collapse:collapse;padding:0;margin:0;width:'+e+"px;height:"+f+"px;background-color:"+(a.isDark(h,i)?b.colorDark:b.colorLight)+';"></td>');g.push("</tr>")}g.push("</table>"),c.innerHTML=g.join("");var j=c.childNodes[0],k=(b.width-j.offsetWidth)/2,l=(b.height-j.offsetHeight)/2;k>0&&l>0&&(j.style.margin=l+"px "+k+"px")},a.prototype.clear=function(){this._el.innerHTML=""},a}();QRCode=function(a,b){if(this._htOption={width:256,height:256,typeNumber:4,colorDark:"#000000",colorLight:"#ffffff",correctLevel:d.H},"string"==typeof b&&(b={text:b}),b)for(var c in b)this._htOption[c]=b[c];"string"==typeof a&&(a=document.getElementById(a)),this._android=n(),this._el=a,this._oQRCode=null,this._oDrawing=new q(this._el,this._htOption),this._htOption.text&&this.makeCode(this._htOption.text)},QRCode.prototype.makeCode=function(a){this._oQRCode=new b(r(a,this._htOption.correctLevel),this._htOption.correctLevel),this._oQRCode.addData(a),this._oQRCode.make(),this._el.title=a,this._oDrawing.draw(this._oQRCode),this.makeImage()},QRCode.prototype.makeImage=function(){"function"==typeof this._oDrawing.makeImage&&(!this._android||this._android>=3)&&this._oDrawing.makeImage()},QRCode.prototype.clear=function(){this._oDrawing.clear()},QRCode.CorrectLevel=d}();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<div id="root"><div style="display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:sans-serif;color:#8a8375;font-size:14px;">Caricamento…</div></div>
+<div id="toast"></div>
+
+<script>
+/* ============ DATA: i18n ============ */
+const LANGS = ['it','en','es','fr','de','pt','el','tr','ar','hi','id','vi','tl','ja','ko','th'];
+const LANG_NAMES = { it:'Italiano', en:'English', es:'Español', fr:'Français', de:'Deutsch', pt:'Português', el:'Ελληνικά', tr:'Türkçe', ar:'العربية', hi:'हिन्दी', id:'Bahasa Indonesia', vi:'Tiếng Việt', tl:'Filipino', ja:'日本語', ko:'한국어', th:'ไทย' };
+const LANG_FLAGS = { it:'🇮🇹', en:'🇬🇧', es:'🇪🇸', fr:'🇫🇷', de:'🇩🇪', pt:'🇵🇹', el:'🇬🇷', tr:'🇹🇷', ar:'🇸🇦', hi:'🇮🇳', id:'🇮🇩', vi:'🇻🇳', tl:'🇵🇭', ja:'🇯🇵', ko:'🇰🇷', th:'🇹🇭' };
+
+let I18N = {};
+function tLang(key, lang){ return (I18N[lang] && I18N[lang][key]) || I18N.en[key] || key; }
+function t(key){ return tLang(key, state.ui.lang); }
+
+/* ============ DATA: controlled medical vocabulary ============ */
+const VOCAB = {
+  allergies: [
+    {key:'penicillin', it:'Allergia alla penicillina', en:'Penicillin allergy', es:'Alergia a la penicilina', fr:'Allergie à la pénicilline', de:'Penicillin-Allergie', th:'แพ้เพนิซิลลิน', el:"Αλλεργία στην πενικιλλίνη", ja:"ペニシリンアレルギー", ko:"페니실린 알레르기", vi:"Dị ứng penicillin", id:"Alergi penisilin", ar:"حساسية من البنسلين", tr:"Penisilin alerjisi", pt:"Alergia à penicilina", hi:"पेनिसिलिन से एलर्जी", tl:"Allergy sa penicillin"},
+    {key:'latex', it:'Allergia al lattice', en:'Latex allergy', es:'Alergia al látex', fr:'Allergie au latex', de:'Latex-Allergie', th:'แพ้ยาง', el:"Αλλεργία στο latex", ja:"ラテックスアレルギー", ko:"라텍스 알레르기", vi:"Dị ứng latex", id:"Alergi lateks", ar:"حساسية من اللاتكس", tr:"Lateks alerjisi", pt:"Alergia ao látex", hi:"लेटेक्स से एलर्जी", tl:"Allergy sa latex"},
+    {key:'nuts', it:'Allergia alla frutta a guscio', en:'Tree nut allergy', es:'Alergia a los frutos secos', fr:'Allergie aux fruits à coque', de:'Nussallergie', th:'แพ้ถั่ว', el:"Αλλεργία στους ξηρούς καρπούς", ja:"ナッツアレルギー", ko:"견과류 알레르기", vi:"Dị ứng các loại hạt", id:"Alergi kacang", ar:"حساسية من المكسرات", tr:"Kuruyemiş alerjisi", pt:"Alergia a frutos secos", hi:"मेवों से एलर्जी", tl:"Allergy sa mani"},
+    {key:'aspirin_al', it:'Allergia all’aspirina', en:'Aspirin allergy', es:'Alergia a la aspirina', fr:'Allergie à l’aspirine', de:'Aspirin-Allergie', th:'แพ้ยาแอสไพริน', el:"Αλλεργία στην ασπιρίνη", ja:"アスピリンアレルギー", ko:"아스피린 알레르기", vi:"Dị ứng aspirin", id:"Alergi aspirin", ar:"حساسية من الأسبرين", tr:"Aspirin alerjisi", pt:"Alergia à aspirina", hi:"एस्पिरिन से एलर्जी", tl:"Allergy sa aspirin"},
+    {key:'iodine', it:'Allergia allo iodio', en:'Iodine allergy', es:'Alergia al yodo', fr:'Allergie à l’iode', de:'Jod-Allergie', th:'แพ้ไอโอดีน', el:"Αλλεργία στο ιώδιο", ja:"ヨードアレルギー", ko:"요오드 알레르기", vi:"Dị ứng i-ốt", id:"Alergi yodium", ar:"حساسية من اليود", tr:"İyot alerjisi", pt:"Alergia ao iodo", hi:"आयोडीन से एलर्जी", tl:"Allergy sa iodine"},
+    {key:'pollen', it:'Allergia al polline', en:'Pollen allergy', es:'Alergia al polen', fr:'Allergie au pollen', de:'Pollenallergie', th:'แพ้ละอองเกสร', el:"Αλλεργία στη γύρη", ja:"花粉アレルギー", ko:"꽃가루 알레르기", vi:"Dị ứng phấn hoa", id:"Alergi serbuk sari", ar:"حساسية من حبوب اللقاح", tr:"Polen alerjisi", pt:"Alergia ao pólen", hi:"पराग से एलर्जी", tl:"Allergy sa polen"},
+    {key:'insect', it:'Allergia alle punture di insetti', en:'Insect sting allergy', es:'Alergia a las picaduras de insectos', fr:'Allergie aux piqûres d’insectes', de:'Insektengiftallergie', th:'แพ้แมลงกัดต่อย', el:"Αλλεργία σε τσιμπήματα εντόμων", ja:"虫刺されアレルギー", ko:"곤충 자상 알레르기", vi:"Dị ứng côn trùng đốt", id:"Alergi sengatan serangga", ar:"حساسية من لدغات الحشرات", tr:"Böcek sokması alerjisi", pt:"Alergia a picadas de insetos", hi:"कीड़े के काटने से एलर्जी", tl:"Allergy sa kagat ng insekto"},
+    {key:'shellfish', it:'Allergia ai crostacei', en:'Shellfish allergy', es:'Alergia al marisco', fr:'Allergie aux fruits de mer', de:'Allergie gegen Meeresfrüchte', th:'แพ้อาหารทะเล', el:"Αλλεργία σε θαλασσινά", ja:"甲殻類アレルギー", ko:"갑각류 알레르기", vi:"Dị ứng hải sản có vỏ", id:"Alergi kerang", ar:"حساسية من المأكولات البحرية", tr:"Kabuklu deniz ürünleri alerjisi", pt:"Alergia a marisco", hi:"शेलफ़िश से एलर्जी", tl:"Allergy sa shellfish"},
+  ],
+  conditions: [
+    {key:'t1d', it:'Diabete di tipo 1', en:'Type 1 diabetes', es:'Diabetes tipo 1', fr:'Diabète de type 1', de:'Diabetes Typ 1', th:'เบาหวานชนิดที่ 1', el:"Διαβήτης τύπου 1", ja:"1型糖尿病", ko:"1형 당뇨병", vi:"Tiểu đường tuýp 1", id:"Diabetes tipe 1", ar:"داء السكري من النوع الأول", tr:"Tip 1 diyabet", pt:"Diabetes tipo 1", hi:"टाइप 1 मधुमेह", tl:"Type 1 diabetes"},
+    {key:'t2d', it:'Diabete di tipo 2', en:'Type 2 diabetes', es:'Diabetes tipo 2', fr:'Diabète de type 2', de:'Diabetes Typ 2', th:'เบาหวานชนิดที่ 2', el:"Διαβήτης τύπου 2", ja:"2型糖尿病", ko:"2형 당뇨병", vi:"Tiểu đường tuýp 2", id:"Diabetes tipe 2", ar:"داء السكري من النوع الثاني", tr:"Tip 2 diyabet", pt:"Diabetes tipo 2", hi:"टाइप 2 मधुमेह", tl:"Type 2 diabetes"},
+    {key:'hypertension', it:'Ipertensione', en:'Hypertension', es:'Hipertensión', fr:'Hypertension', de:'Bluthochdruck', th:'ความดันโลหิตสูง', el:"Υπέρταση", ja:"高血圧", ko:"고혈압", vi:"Tăng huyết áp", id:"Hipertensi", ar:"ارتفاع ضغط الدم", tr:"Hipertansiyon", pt:"Hipertensão", hi:"उच्च रक्तचाप", tl:"Hypertension"},
+    {key:'asthma', it:'Asma', en:'Asthma', es:'Asma', fr:'Asthme', de:'Asthma', th:'โรคหอบหืด', el:"Άσθμα", ja:"喘息", ko:"천식", vi:"Hen suyễn", id:"Asma", ar:"الربو", tr:"Astım", pt:"Asma", hi:"अस्थमा", tl:"Hika"},
+    {key:'epilepsy', it:'Epilessia', en:'Epilepsy', es:'Epilepsia', fr:'Épilepsie', de:'Epilepsie', th:'โรคลมชัก', el:"Επιληψία", ja:"てんかん", ko:"간질", vi:"Động kinh", id:"Epilepsi", ar:"الصرع", tr:"Epilepsi", pt:"Epilepsia", hi:"मिर्गी", tl:"Epilepsy"},
+    {key:'heart', it:'Cardiopatia', en:'Heart disease', es:'Cardiopatía', fr:'Maladie cardiaque', de:'Herzerkrankung', th:'โรคหัวใจ', el:"Καρδιοπάθεια", ja:"心疾患", ko:"심장 질환", vi:"Bệnh tim", id:"Penyakit jantung", ar:"مرض القلب", tr:"Kalp hastalığı", pt:"Doença cardíaca", hi:"हृदय रोग", tl:"Sakit sa puso"},
+    {key:'celiac', it:'Celiachia', en:'Celiac disease', es:'Enfermedad celíaca', fr:'Maladie cœliaque', de:'Zöliakie', th:'โรคชีลิแอค', el:"Κοιλιοκάκη", ja:"セリアック病", ko:"셀리악병", vi:"Bệnh celiac", id:"Penyakit celiac", ar:"مرض السيلياك", tr:"Çölyak hastalığı", pt:"Doença celíaca", hi:"सीलिएक रोग", tl:"Celiac disease"},
+    {key:'thyroid', it:'Ipotiroidismo', en:'Hypothyroidism', es:'Hipotiroidismo', fr:'Hypothyroïdie', de:'Schilddrüsenunterfunktion', th:'ภาวะไทรอยด์ต่ำ', el:"Υποθυρεοειδισμός", ja:"甲状腺機能低下症", ko:"갑상선 기능 저하증", vi:"Suy giáp", id:"Hipotiroidisme", ar:"قصور الغدة الدرقية", tr:"Hipotiroidizm", pt:"Hipotiroidismo", hi:"हाइपोथायरायडिज्म", tl:"Hypothyroidism"},
+  ],
+  medications: [
+    {key:'aspirin_med', it:'Aspirina', en:'Aspirin', es:'Aspirina', fr:'Aspirine', de:'Aspirin', th:'แอสไพริน', el:"Ασπιρίνη", ja:"アスピリン", ko:"아스피린", vi:"Aspirin", id:"Aspirin", ar:"الأسبرين", tr:"Aspirin", pt:"Aspirina", hi:"एस्पिरिन", tl:"Aspirin"},
+    {key:'metformin', it:'Metformina', en:'Metformin', es:'Metformina', fr:'Metformine', de:'Metformin', th:'เมตฟอร์มิน', el:"Μετφορμίνη", ja:"メトホルミン", ko:"메트포르민", vi:"Metformin", id:"Metformin", ar:"ميتفورمين", tr:"Metformin", pt:"Metformina", hi:"मेटफॉर्मिन", tl:"Metformin"},
+    {key:'insulin', it:'Insulina', en:'Insulin', es:'Insulina', fr:'Insuline', de:'Insulin', th:'อินซูลิน', el:"Ινσουλίνη", ja:"インスリン", ko:"인슐린", vi:"Insulin", id:"Insulin", ar:"الأنسولين", tr:"İnsülin", pt:"Insulina", hi:"इंसुलिन", tl:"Insulin"},
+    {key:'warfarin', it:'Warfarin', en:'Warfarin', es:'Warfarina', fr:'Warfarine', de:'Warfarin', th:'วาร์ฟาริน', el:"Βαρφαρίνη", ja:"ワルファリン", ko:"와파린", vi:"Warfarin", id:"Warfarin", ar:"الوارفارين", tr:"Varfarin", pt:"Varfarina", hi:"वारफ़रिन", tl:"Warfarin"},
+    {key:'salbutamol', it:'Salbutamolo (inalatore)', en:'Salbutamol (inhaler)', es:'Salbutamol (inhalador)', fr:'Salbutamol (inhalateur)', de:'Salbutamol (Inhalator)', th:'ซัลบูทามอล (ยาสูดพ่น)', el:"Σαλβουταμόλη (εισπνεόμενο)", ja:"サルブタモール(吸入器)", ko:"살부타몰(흡입기)", vi:"Salbutamol (dạng hít)", id:"Salbutamol (inhaler)", ar:"سالبوتامول (بخاخ)", tr:"Salbutamol (inhaler)", pt:"Salbutamol (inalador)", hi:"साल्बुटामोल (इनहेलर)", tl:"Salbutamol (inhaler)"},
+    {key:'levothyroxine', it:'Levotiroxina', en:'Levothyroxine', es:'Levotiroxina', fr:'Lévothyroxine', de:'Levothyroxin', th:'เลโวไทรอกซิน', el:"Λεβοθυροξίνη", ja:"レボチロキシン", ko:"레보티록신", vi:"Levothyroxine", id:"Levotiroksin", ar:"ليفوثيروكسين", tr:"Levotiroksin", pt:"Levotiroxina", hi:"लेवोथायरोक्सिन", tl:"Levothyroxine"},
+  ],
+};
+function vocabLabel(list, id, lang){ const item = VOCAB[list].find(v=>v.key===id); return item ? item[lang] : id; }
+
+/* ============ DATA: countries (travel mode) ============ */
+// Reusable vaccination/health reminders (generic, non-prescriptive — always paired with demoContentNote's
+// "verify with official sources" disclaimer in the UI).
+let COUNTRIES = [];
+function countryName(c){ return c.name[state.ui.lang] || c.name.en; }
+
+/* ============ STATE + STORAGE ============ */
+// Nuova direzione del logo approvata da Mattia il 24/11/2026 (v5.23): globo "Americhe" + aereo
+// (emoji reali, set Noto Emoji di Google, licenza Apache 2.0) + sole con croce rossa sovrapposta
+// + raggi attorno al globo. Inline SVG invece di un PNG base64: risolve in modo permanente il
+// limite di bassa risoluzione segnalato in precedenza (v5.18), perché un SVG è vettoriale e si
+// adatta a qualunque dimensione. Composizione ancora da rifinire/vettorizzare a livello grafico
+// professionale prima di qualunque export per gli store (vedi mvp-prototype-log.md, v5.23).
+const BRAND_LOGO = `<svg viewBox="0 0 200 200" width="100%" height="100%" style="display:block" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="svLogoBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b6e63"/><stop offset="0.55" stop-color="#2c7a63"/><stop offset="1" stop-color="#e08a3c"/></linearGradient><clipPath id="svLogoClip"><rect width="200" height="200" rx="44"/></clipPath></defs><rect width="200" height="200" rx="44" fill="url(#svLogoBg)"/><g clip-path="url(#svLogoClip)"><g stroke="#ffe3b0" stroke-width="2.6" stroke-linecap="round" opacity="0.85"><line x1="80" y1="14" x2="80" y2="3"/><line x1="8" y1="86" x2="-3" y2="86"/><line x1="30" y1="34" x2="21" y2="25"/><line x1="30" y1="138" x2="21" y2="147"/><line x1="80" y1="158" x2="80" y2="169"/><line x1="130" y1="34" x2="139" y2="25"/><line x1="152" y1="86" x2="163" y2="86"/></g><svg x="104" y="104" width="92" height="92" viewBox="0 0 128 128"><radialGradient id="ezua" cx="64" cy="64" r="53.418" gradientTransform="matrix(.9569 .408 -.408 .9569 28.876 -23.354)" gradientUnits="userSpaceOnUse"><stop offset=".386" stop-color="#FF8F00"/><stop offset=".818" stop-color="#FFB300"/></radialGradient><path fill="url(#ezua)" d="m81.56 35.12 23.3-13.38c1.48-.85 3.12.83 2.24 2.29L93.24 47.04c-2.07 3.44-.28 7.91 3.6 8.95L122.78 63c1.65.45 1.62 2.79-.03 3.2l-26.08 6.47c-3.9.97-5.79 5.4-3.79 8.88l13.38 23.3c.85 1.48-.83 3.12-2.29 2.24L80.96 93.24c-3.44-2.07-7.91-.28-8.95 3.6L65 122.78c-.45 1.65-2.79 1.62-3.2-.03l-6.47-26.08c-.97-3.9-5.4-5.79-8.88-3.79l-23.3 13.38c-1.48.85-3.12-.83-2.24-2.29l13.86-23.02c2.07-3.44.28-7.91-3.6-8.95L5.22 64.99c-1.65-.45-1.62-2.79.03-3.2l26.08-6.47c3.9-.97 5.79-5.4 3.79-8.88l-13.38-23.3c-.85-1.48.83-3.12 2.29-2.24l23.02 13.86c3.44 2.07 7.91.28 8.95-3.6l7.01-25.94c.45-1.65 2.79-1.62 3.2.03l6.47 26.08c.97 3.9 5.4 5.79 8.88 3.79z"/><radialGradient id="ezub" cx="64.042" cy="64.328" r="37.055" gradientTransform="rotate(22.937 64.94 64.226)" gradientUnits="userSpaceOnUse"><stop offset=".575" stop-color="#FFEB3B"/><stop offset=".84" stop-color="#FBC02D"/></radialGradient><circle cx="64.07" cy="63.97" r="30.03" fill="url(#ezub)"/><path fill="#eee" d="M64.11 35.99c3.74 0 7.4.74 10.87 2.21 14.21 6.01 20.88 22.47 14.87 36.68-4.39 10.38-14.52 17.08-25.81 17.08-3.74 0-7.4-.74-10.87-2.21-14.21-6.02-20.88-22.47-14.87-36.69 4.39-10.37 14.52-17.07 25.81-17.07m0-2c-11.69 0-22.82 6.88-27.66 18.3-6.44 15.23.7 32.86 15.93 39.3 3.8 1.61 7.75 2.37 11.65 2.37 11.69 0 22.82-6.88 27.66-18.3 6.44-15.23-.7-32.86-15.93-39.3a29.82 29.82 0 0 0-11.65-2.37z" opacity=".2"/><path fill="#eee" d="m64.55 11.02 5.22 21.04c1 4.04 4.62 6.87 8.79 6.87 1.57 0 3.12-.42 4.5-1.21l18.8-10.8-11.19 18.57c-1.48 2.45-1.71 5.38-.64 8.04s3.27 4.61 6.03 5.36l20.92 5.66-21.04 5.22c-2.78.69-5.02 2.6-6.14 5.23s-.95 5.57.48 8.05l10.8 18.8-18.57-11.18a9.025 9.025 0 0 0-4.66-1.3c-4.08 0-7.68 2.75-8.74 6.69l-5.66 20.92-5.22-21.04c-1-4.04-4.62-6.87-8.79-6.87-1.57 0-3.12.42-4.5 1.21l-18.8 10.8 11.18-18.57c1.48-2.45 1.71-5.38.64-8.04s-3.27-4.61-6.03-5.36l-20.92-5.66 21.04-5.22c2.78-.69 5.02-2.6 6.14-5.23s.95-5.57-.48-8.05l-10.8-18.8 18.57 11.18c1.41.85 3.02 1.3 4.66 1.3 4.08 0 7.68-2.75 8.74-6.69l5.67-20.92M64.61 4c-.69 0-1.37.41-1.59 1.22L56 31.16c-.75 2.76-3.23 4.47-5.85 4.47-1.05 0-2.12-.28-3.11-.87L24.02 20.9c-.28-.17-.58-.25-.86-.25-1.16 0-2.11 1.3-1.43 2.49l13.38 23.3c2 3.48.11 7.91-3.79 8.88L5.25 61.79c-1.66.41-1.68 2.75-.03 3.2L31.16 72c3.88 1.05 5.67 5.51 3.6 8.95L20.9 103.98c-.72 1.19.23 2.52 1.41 2.52.27 0 .55-.07.83-.23l23.3-13.38c.96-.55 1.99-.81 3-.81 2.66 0 5.18 1.77 5.88 4.59l6.47 26.08c.21.83.91 1.25 1.6 1.25s1.37-.41 1.59-1.22L72 96.84c.75-2.76 3.23-4.47 5.85-4.47 1.05 0 2.12.28 3.11.87l23.02 13.86c.28.17.58.25.86.25 1.16 0 2.11-1.3 1.43-2.49l-13.38-23.3c-2-3.48-.11-7.91 3.79-8.88l26.08-6.47c1.66-.41 1.68-2.75.03-3.2L96.84 56c-3.88-1.05-5.67-5.51-3.6-8.95l13.86-23.02c.72-1.19-.23-2.52-1.41-2.52-.27 0-.55.07-.83.23l-23.3 13.38c-.96.55-1.99.81-3 .81-2.66 0-5.18-1.77-5.88-4.59L66.21 5.25C66 4.42 65.3 4 64.61 4z" opacity=".2"/></svg><circle cx="150" cy="150" r="22" fill="#e3503a" stroke="#0f3d38" stroke-width="3"/><g fill="#ffffff"><rect x="144" y="135" width="12" height="30" rx="4"/><rect x="135" y="144" width="30" height="12" rx="4"/></g><svg x="6" y="6" width="128" height="128" viewBox="0 0 128 128"><radialGradient id="anga" cx="63.833" cy="4" r="120.21" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#42A5F5"/><stop offset=".352" stop-color="#42A5F5"/><stop offset=".68" stop-color="#2B8BE2"/><stop offset="1" stop-color="#1976D2"/></radialGradient><circle cx="64" cy="64" r="60" fill="url(#anga)"/><defs><circle id="angb" cx="64" cy="64" r="60"/></defs><clipPath id="angc"><use xlink:href="#angb"/></clipPath><g fill="#424242" clip-path="url(#angc)" opacity=".2"><path d="M35.66-8.53c.61 0 1.23.16 1.79.5l4.17 2.52c3.15 1.9 6.75 2.89 10.39 2.89 1.11 0 2.22-.09 3.32-.28l12.49-2.09c.21-.04.42-.05.63-.05 1.93 0 3.61 1.49 3.77 3.48l.42 5.14a4.632 4.632 0 0 1-3.82 4.94l-1.34.24a9.082 9.082 0 0 0-6.76 5.34c-.51 1.17-.25 2.54.65 3.45l7.81 7.9c.34.35.81.54 1.29.54.09 0 .19-.01.28-.02.82-.13 1.44-.79 1.52-1.62l.87-8.97a3.831 3.831 0 0 1 3.81-3.46h.28c1.48 0 2.83.86 3.46 2.2l1.76 3.76a1.737 1.737 0 0 0 2.52.72 1.732 1.732 0 0 1 2.54.77l4.56 10.52c.98 2.26-.07 4.88-2.34 5.83l-3.69 1.55A42.072 42.072 0 0 0 69.9 49.24l-.09.11c-.22.27-.33.61-.31.95l.25 3.9c.05.71-.47 1.34-1.18 1.43-.13.02-.25.03-.38.03-1.23 0-2.34-.8-2.71-2l-.01-.05a2.901 2.901 0 0 0-2.77-2.05c-.14 0-.29.01-.44.03l-2.5.38a5.418 5.418 0 0 0-4.2 3.29l-.73 1.77c-.26.62-.21 1.32.12 1.9l.08.13a2.164 2.164 0 0 0 3.33.53c.4-.36.92-.56 1.46-.56h.12l1.54.09c.9.05 1.5.95 1.2 1.8l-.22.63c-.43 1.23.48 2.52 1.79 2.52.97 0 1.78.73 1.88 1.69l.25 2.29c.1.87.78 1.56 1.65 1.67l.21.03c.08.01.16.01.24.01.66 0 1.27-.34 1.62-.91a5.267 5.267 0 0 1 4.51-2.54c.23 0 .47.02.7.05l5.07.68c2.78.37 5.43 1.44 7.69 3.1l3.61 2.66c1.09.8 1.89 1.93 2.3 3.21a6.362 6.362 0 0 0 3.31 3.82l7.06 3.4a3.99 3.99 0 0 1 1.76 5.53l-4.85 8.8c-.55 1-1.51 1.72-2.62 1.97l-2.85.64a4.064 4.064 0 0 0-3.15 3.64l-.03.44a7.78 7.78 0 0 1-2.13 4.77l-14.93 15.66a5.284 5.284 0 0 0-.44 6.77l1.06 1.45c.79 1.08-.01 2.54-1.27 2.54-.08 0-.17-.01-.26-.02l-2.76-.42a4.834 4.834 0 0 1-3.84-3.22l-1.18-3.49a9.13 9.13 0 0 1-.13-5.45l6.23-21.96c.69-2.41-.02-5.01-1.82-6.75l-1.3-1.25a10.418 10.418 0 0 1-2.98-5.36l-1.33-6.22c-.43-2.01-.05-4.1 1.05-5.84l.23-.36c.7-1.11.1-2.58-1.18-2.87l-.45-.1c-.44-.1-.83-.35-1.1-.72l-3.59-4.82c-.16-.21-.37-.37-.61-.46l-8.78-3.29c-2.24-.84-4.12-2.42-5.33-4.49l-8.5-14.54a14.337 14.337 0 0 1-1.94-6.5l-.21-4.26c-.14-2.87-1.05-5.66-2.62-8.07l-2.17-3.32a23.23 23.23 0 0 0-7.6-7.29l-.65-.37a6.988 6.988 0 0 0-4.23-.95c-.6.06-1.2.09-1.8.09-2.13 0-4.25-.39-6.2-1.29L2.6 8.52c-.56-.26-.8-1-.41-1.48l.01-.01 1.84-2.19c.67-.8.23-2.02-.79-2.21A1.351 1.351 0 0 1 2.23.82l.68-1.79c.19-.5.66-.84 1.19-.87 1.08-.07 21.59-.63 27.16-5.28.8-.66 1.97-.61 2.9-1.06.47-.23.98-.35 1.5-.35m0-3c-.97 0-1.93.22-2.8.64-.1.04-.4.12-.62.17-.8.19-1.89.45-2.91 1.29-2.14 1.79-9.81 3.93-24.91 4.57-.26.01-.43.02-.51.03-1.7.11-3.19 1.2-3.8 2.79L-.57-.25C-1.03.96-.94 2.3-.3 3.43c.21.38.47.71.77 1.01l-.57.67a3.886 3.886 0 0 0-.8 3.38 4.045 4.045 0 0 0 2.25 2.76l7.25 3.33c2.25 1.03 4.76 1.56 7.45 1.56.69 0 1.39-.03 2.1-.1.13-.01.26-.02.39-.02.71 0 1.41.19 2.02.56l.64.38a20.39 20.39 0 0 1 6.62 6.35l2.17 3.32c1.28 1.96 2.02 4.24 2.14 6.58l.21 4.26c.14 2.76.95 5.48 2.34 7.86l8.5 14.54c1.55 2.65 3.99 4.7 6.86 5.78l8.33 3.12 3.3 4.43c.49.66 1.14 1.18 1.87 1.52a10.722 10.722 0 0 0-.95 7.2l1.33 6.22c.56 2.64 1.89 5.03 3.84 6.9l1.3 1.25c1.01.97 1.4 2.42 1.02 3.77l-6.23 21.96c-.68 2.38-.61 4.88.18 7.23l1.18 3.49a7.801 7.801 0 0 0 6.22 5.23l2.76.42c.24.04.48.05.71.05 1.73 0 3.3-.97 4.09-2.52s.64-3.39-.39-4.79l-1.06-1.45c-.66-.9-.57-2.13.19-2.93l14.93-15.66a10.83 10.83 0 0 0 2.95-6.6l.03-.44c.04-.46.37-.84.82-.95l2.85-.64c1.95-.44 3.62-1.7 4.59-3.45l4.85-8.8a7.06 7.06 0 0 0 .54-5.51 7.017 7.017 0 0 0-3.63-4.18l-7.06-3.4c-.84-.4-1.47-1.14-1.75-2.02a9.315 9.315 0 0 0-3.38-4.73l-3.61-2.66c-2.66-1.96-5.8-3.22-9.07-3.66l-5.07-.68a8.32 8.32 0 0 0-6.6 2.03 4.896 4.896 0 0 0-3.43-4.12 4.27 4.27 0 0 0-.66-3.23 4.33 4.33 0 0 0-3.38-1.93l-1.54-.09c-.1-.01-.2-.01-.29-.01-.48 0-.95.07-1.4.19.35-.68 1.02-1.17 1.79-1.28l2.42-.37c.77 2.44 3 4.08 5.57 4.08.26 0 .52-.02.77-.05 2.26-.3 3.92-2.32 3.77-4.6l-.21-3.24c3.96-4.66 9.02-8.36 14.66-10.73l3.69-1.55c1.84-.77 3.27-2.22 4.01-4.07s.72-3.88-.08-5.72l-4.56-10.52a4.74 4.74 0 0 0-5.61-2.68l-1.24-2.65a6.843 6.843 0 0 0-6.18-3.93h-.28c-3.53 0-6.45 2.65-6.79 6.17l-.62 6.45-6.02-6.1a.14.14 0 0 1-.03-.15 6.101 6.101 0 0 1 4.53-3.58l1.34-.24c3.9-.69 6.61-4.19 6.29-8.14l-.43-5.11c-.28-3.5-3.25-6.24-6.76-6.24-.38 0-.76.03-1.13.09l-12.49 2.1c-.93.16-1.88.24-2.83.24-3.12 0-6.17-.85-8.84-2.46L39-10.6c-1.01-.6-2.16-.93-3.34-.93z"/><path d="M75.46 57.28c.61 0 1.21.09 1.8.26 2.19.65 6.06 1.79 7.92 2.34.52.15.75.77.45 1.23l-.46.68c-.24.37-.65.58-1.08.58-.07 0-.14-.01-.2-.02l-8.14-1.29a7.268 7.268 0 0 0-2.21-.01l-1.48.22c-.2.03-.41.05-.61.05-1.09 0-2.14-.44-2.91-1.23l-.33-.34a.566.566 0 0 1 .27-.95c1.36-.34 3.84-.95 5.51-1.35.48-.11.98-.17 1.47-.17m0-3c-.74 0-1.47.09-2.19.26-1.67.4-4.17 1.02-5.53 1.35-1.24.31-2.23 1.26-2.58 2.49s-.01 2.56.88 3.47l.33.34a7.09 7.09 0 0 0 5.06 2.13c.35 0 .71-.03 1.05-.08l1.48-.22c.21-.03.42-.05.63-.05.22 0 .45.02.67.05l8.14 1.29c.22.04.45.05.67.05a4.3 4.3 0 0 0 3.58-1.92l.46-.68c.67-1 .82-2.28.41-3.41s-1.35-2.01-2.5-2.36l-5.5-1.62-2.42-.71c-.85-.25-1.74-.38-2.64-.38z"/><path d="M89.53 60.91c.07 0 .14.01.21.02 2.14.35 6.7 2.89 5.78 3.68-.24.21-.54.31-.85.31-.11 0-.23-.01-.34-.04l-6.62-1.77a.21.21 0 0 1-.12-.32l.85-1.3c.25-.36.66-.58 1.09-.58m0-3c-1.45 0-2.8.73-3.59 1.94l-.85 1.3A3.207 3.207 0 0 0 86.95 66l6.62 1.77c.36.1.74.15 1.11.15 1.03 0 2.02-.37 2.8-1.04 1-.86 1.4-2.18 1.04-3.46-.84-3-6.58-5.18-8.28-5.46-.24-.03-.47-.05-.71-.05z"/></g><g fill="url(#angd)" clip-path="url(#angc)"><radialGradient id="angd" cx="64" cy="4.333" r="120.04" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#AEEA00"/><stop offset=".237" stop-color="#ADE903"/><stop offset=".392" stop-color="#A9E40B"/><stop offset=".522" stop-color="#A2DC1A"/><stop offset=".639" stop-color="#98D12F"/><stop offset=".746" stop-color="#8BC34A"/><stop offset="1" stop-color="#8BC34A"/></radialGradient><path d="m91.68 72.8-3.61-2.66c-2.26-1.66-4.9-2.73-7.69-3.1l-5.07-.68c-2.08-.28-4.12.7-5.21 2.5-.39.64-1.11.99-1.86.9l-.21-.03a1.9 1.9 0 0 1-1.65-1.67l-.25-2.29c-.11-.96-.92-1.69-1.88-1.69-1.31 0-2.22-1.29-1.79-2.52l.22-.63c.3-.85-.3-1.75-1.2-1.8l-1.54-.09c-.58-.03-1.15.17-1.58.56-1.02.93-2.65.67-3.33-.53l-.08-.13c-.33-.58-.38-1.28-.12-1.9l.73-1.77a5.414 5.414 0 0 1 4.2-3.29l2.5-.38c1.42-.21 2.78.64 3.2 2.01l.01.05a2.838 2.838 0 0 0 3.09 1.98 1.36 1.36 0 0 0 1.18-1.43l-.25-3.9c-.02-.35.09-.69.31-.95l.09-.11c4.34-5.23 9.87-9.34 16.14-11.97l3.69-1.55a4.411 4.411 0 0 0 2.34-5.83L87.5 19.38a1.747 1.747 0 0 0-2.54-.77c-.89.57-2.07.23-2.52-.73l-1.76-3.76a3.829 3.829 0 0 0-3.46-2.2h-.28c-1.97 0-3.62 1.5-3.81 3.46l-.87 8.97c-.08.82-.71 1.49-1.52 1.62-.58.09-1.16-.1-1.57-.52l-7.81-7.9c-.9-.91-1.15-2.28-.65-3.45a9.117 9.117 0 0 1 6.76-5.34l1.34-.24a4.645 4.645 0 0 0 3.82-4.94l-.42-5.14a3.785 3.785 0 0 0-4.4-3.43l-12.48 2.1c-4.74.79-9.6-.14-13.71-2.62l-4.17-2.52a3.468 3.468 0 0 0-3.29-.16c-.93.45-2.1.4-2.9 1.06C25.68-2.47 5.18-1.91 4.1-1.84c-.53.03-1 .37-1.19.87L2.23.82c-.3.79.19 1.66 1.02 1.82 1.02.19 1.46 1.41.79 2.21L2.2 7.04l-.01.01c-.39.48-.15 1.22.41 1.47l7.25 3.33c2.5 1.15 5.26 1.46 8 1.2 1.45-.14 2.93.17 4.23.94l.64.38c3.06 1.82 5.65 4.31 7.6 7.29l2.17 3.32c1.57 2.41 2.48 5.19 2.62 8.07l.21 4.26c.11 2.29.78 4.52 1.94 6.5l8.5 14.54a10.44 10.44 0 0 0 5.33 4.49l8.78 3.29c.24.09.46.25.61.46l3.59 4.82c.27.36.66.62 1.1.72l.45.1c1.28.29 1.89 1.76 1.18 2.87l-.23.36a7.837 7.837 0 0 0-1.05 5.84l1.33 6.22c.44 2.05 1.48 3.91 2.98 5.36l1.3 1.25a6.774 6.774 0 0 1 1.82 6.75l-6.23 21.96c-.51 1.79-.46 3.69.13 5.45l1.18 3.49a4.817 4.817 0 0 0 3.84 3.22l2.76.42c1.41.22 2.37-1.37 1.53-2.52l-1.06-1.45a5.283 5.283 0 0 1 .44-6.77l14.93-15.66a7.78 7.78 0 0 0 2.13-4.77l.03-.44a4.064 4.064 0 0 1 3.15-3.64l2.85-.64c1.12-.25 2.07-.97 2.62-1.97l4.85-8.8c1.11-2.01.3-4.54-1.76-5.53l-7.06-3.4a6.39 6.39 0 0 1-3.31-3.82c-.4-1.29-1.2-2.41-2.29-3.21z"/><path d="M73.98 57.46c-1.67.4-4.15 1.01-5.51 1.35-.43.11-.58.64-.27.95l.33.34a4.04 4.04 0 0 0 3.52 1.18l1.48-.22c.73-.11 1.48-.11 2.22.01l8.14 1.29c.5.08 1-.14 1.29-.56l.46-.68c.3-.46.08-1.07-.45-1.23-1.86-.55-5.73-1.69-7.92-2.34a6.33 6.33 0 0 0-3.29-.09zm14.47 4.04-.85 1.3a.21.21 0 0 0 .12.32l6.62 1.77c.42.11.86.01 1.18-.27.93-.8-3.64-3.33-5.78-3.68-.5-.09-1.01.13-1.29.56z"/></g><path fill="#424242" d="M64 7c31.43 0 57 25.57 57 57s-25.57 57-57 57S7 95.43 7 64 32.57 7 64 7m0-3C30.86 4 4 30.86 4 64s26.86 60 60 60 60-26.86 60-60S97.14 4 64 4z" opacity=".2"/></svg><svg x="48" y="34" width="78" height="78" viewBox="0 0 128 128" style="transform:rotate(18deg);transform-origin:99px 85px"><path fill="#757575" d="m40.76 37.49-.6-.6c-.91-.91-.91-2.39 0-3.3l7.78-7.78c.91-.91 2.39-.91 3.3 0l.6.6c.91.91.91 2.39 0 3.3l-7.78 7.78c-.9.91-2.39.91-3.3 0zm18.12 1.95-.6-.6c-.91-.91-.91-2.39 0-3.3l7.78-7.78c.91-.91 2.39-.91 3.3 0l.6.6c.91.91.91 2.39 0 3.3l-7.78 7.78c-.9.91-2.39.91-3.3 0zm31.64 48.01.6.6c.91.91 2.39.91 3.3 0l7.78-7.78c.91-.91.91-2.39 0-3.3l-.6-.6c-.91-.91-2.39-.91-3.3 0l-7.78 7.78c-.91.91-.91 2.39 0 3.3zm-1.95-18.12.6.6c.91.91 2.39.91 3.3 0l7.78-7.78c.91-.91.91-2.39 0-3.3l-.6-.6c-.91-.91-2.39-.91-3.3 0l-7.78 7.78c-.91.91-.91 2.39 0 3.3z"/><path fill="#039BE5" d="M80.18 35.89s-57.46-6.54-64.36-6.54c-5.72 0-8.99 4.81-8.99 4.81s32.85 7.86 43.39 10.37 16.05 5.25 16.05 5.25l13.91-13.89z"/><path fill="#424242" d="M15.82 31.71c5.56 0 47.5 4.63 61.91 6.24l-9.58 9.73c-2.82-1.12-9.33-3.53-17.38-5.45-8.18-1.95-29.79-7.12-39.06-9.34 1.1-.66 2.49-1.18 4.11-1.18m0-2.36c-5.72 0-8.99 4.81-8.99 4.81s32.85 7.86 43.39 10.37 18.5 5.94 18.5 5.94l14.11-14.32c.01-.01-60.11-6.8-67.01-6.8z" opacity=".2"/><path fill="#039BE5" d="M91.9 47.6s6.54 57.46 6.54 64.36c0 5.72-4.81 8.99-4.81 8.99S85.77 88.1 83.26 77.56s-5.25-16.05-5.25-16.05L91.9 47.6zm-45.3 64.61-2.43 2.95c-.87 1.05-2.45.92-3.15-.27l-8.88-15.1c-.47-.8-.36-1.84.26-2.52l8.1-8.73c1.12-1.21 3.08-.56 3.34 1.11l3.21 20.88c.09.61-.07 1.22-.45 1.68z"/><path fill="#424242" d="m41.62 90.81 3.08 19.99-1.95 2.37-8.48-14.43 7.35-7.93m.27-2.89c-.49 0-1 .2-1.39.62l-8.1 8.73c-.63.68-.74 1.72-.26 2.52l8.88 15.1c.38.64 1.02.98 1.67.98.54 0 1.09-.23 1.48-.71l2.43-2.95c.38-.46.55-1.08.45-1.68l-3.21-20.88c-.17-1.08-1.05-1.73-1.95-1.73z" opacity=".2"/><path fill="#039BE5" d="m16.25 81.6-2.95 2.43c-1.05.87-.92 2.45.27 3.15l15.1 8.88c.8.47 1.84.36 2.52-.26l8.73-8.1c1.21-1.12.56-3.08-1.11-3.34l-20.88-3.21a2.1 2.1 0 0 0-1.68.45z"/><path fill="#424242" d="m17.66 83.5 19.99 3.08-7.93 7.36-14.42-8.49 2.36-1.95m-.06-2.38c-.49 0-.97.17-1.35.48l-2.95 2.43c-1.05.87-.92 2.45.27 3.15l15.1 8.88c.33.2.71.29 1.08.29.52 0 1.04-.19 1.44-.56l8.73-8.1c1.21-1.12.56-3.08-1.11-3.34l-20.88-3.21c-.11-.01-.22-.02-.33-.02zm72.02-32.84c1.66 14.84 6.45 58.12 6.45 63.68 0 1.62-.52 3.01-1.18 4.11-2.22-9.27-7.39-30.89-9.34-39.06-1.96-8.21-4.8-15.31-6.08-18.3l10.15-10.43m1.79-5.24L76.67 58.2s4.07 8.82 6.59 19.36c2.51 10.54 10.37 43.39 10.37 43.39s4.81-3.28 4.81-8.99c0-6.9-7.03-68.92-7.03-68.92z" opacity=".2"/><linearGradient id="fdxa" x1="53.522" x2="110.52" y1="76.748" y2="16.998" gradientUnits="userSpaceOnUse"><stop offset=".006" stop-color="#BDBDBD"/><stop offset=".094" stop-color="#C4C4C4"/><stop offset=".421" stop-color="#DBDBDB"/><stop offset=".731" stop-color="#E9E9E9"/><stop offset="1" stop-color="#eee"/></linearGradient><path fill="url(#fdxa)" d="M113.96 14.01c-3.55-3.55-11.25-2.89-16.95 2.81-5.77 5.77-58.3 60.83-58.3 60.83s-8.97 9.45-6.77 18.38c8.93 2.21 18.38-6.77 18.38-6.77s55.14-52.61 60.83-58.3c5.7-5.7 6.36-13.39 2.81-16.95z"/><path fill="#4FC3F7" d="M110.36 27.3c1.78-1.98 2.56-5.5-.81-8.87s-6.9-2.59-8.87-.81c-.29.26-1.03.81-.84 1.27.17.43 1.01.49 1.38.53 1.91.21 3.62 1.1 4.92 2.42 1.31 1.3 2.21 3.02 2.42 4.92.04.37.1 1.21.53 1.38.46.19 1.01-.55 1.27-.84z"/><path fill="#424242" d="M108.01 13.82c1.89 0 3.5.57 4.54 1.6 2.67 2.67 2.18 9.13-2.81 14.12-5.61 5.61-60.24 57.75-60.79 58.27-.07.07-7.03 6.57-14.07 6.57-.41 0-.82-.02-1.22-.07-.85-7.4 6.42-15.2 6.5-15.28.53-.55 52.58-55.11 58.27-60.79 2.76-2.77 6.34-4.42 9.58-4.42m0-2c-3.51 0-7.61 1.61-10.99 5-5.77 5.77-58.3 60.83-58.3 60.83s-8.97 9.45-6.77 18.38c.98.24 1.96.35 2.94.35 7.95 0 15.44-7.12 15.44-7.12s55.14-52.61 60.83-58.3c5.7-5.7 6.37-13.39 2.81-16.95-1.45-1.44-3.57-2.19-5.96-2.19z" opacity=".2"/><ellipse cx="38.45" cy="89.73" fill="#616161" rx="15.52" ry="2.66" transform="rotate(-45.001 38.45 89.728)"/></svg></g></svg>`;
+const STORAGE_KEY = 'ghid_prototype_v1';
+function uid(prefix){ return prefix + '-' + Math.random().toString(36).slice(2,8).toUpperCase(); }
+function blankProfile(){
+  return {
+    id: uid('SVH'), name:'', nationality:'IT', bloodType:'',
+    allergies:[], allergiesCustom:[], conditions:[], conditionsCustom:[],
+    medications:[], medicationsCustom:[], surgeries:[],
+    emergencyContact:{ name:'', relationship:'', phone:'' },
+    emergencyContactsExtra:[], emergencyNotes:'',
+    insurance:{ company:'', policy:'', phone:'' },
+    insuranceWallet:[],
+    familyMembers:[],
+    documents:[],
+  };
+}
+function blankFamDraft(){
+  // Scratch state for the "add family member" form — mirrors the controlled-vocabulary
+  // shape of the main profile (allergies/conditions/medications + a Custom list for
+  // anything outside VOCAB), so family members get the same verified-translation
+  // treatment as the user's own profile instead of a single free-text field (v5.19).
+  // Also holds the plain fields (name, relationship, ...): every chip click re-renders
+  // the whole card, so those fields must live in state too, or they'd be wiped on every
+  // click instead of surviving like the rest of the form. Default relationship is the
+  // literal first RELATIONSHIPS value (not RELATIONSHIPS[0]) because this runs before
+  // that const is declared further down the script.
+  return { name:'', relationship:'relSpouse', bloodType:'', contactName:'', contactPhone:'', allergies:[], allergiesCustom:[], conditions:[], conditionsCustom:[], medications:[], medicationsCustom:[] };
+}
+const DEMO_PROFILE = {
+  id: uid('SVH'), name:'Mattia Marras', nationality:'IT', bloodType:'O+',
+  allergies:['penicillin'], allergiesCustom:[],
+  conditions:['asthma'], conditionsCustom:[],
+  medications:[{key:'salbutamol', dosage:'2 puff al bisogno'}], medicationsCustom:[],
+  surgeries:[{desc:'Appendicectomia', year:'2014'}],
+  emergencyContact:{ name:'Giulia Marras', relationship:'relSibling', phone:'+39 333 123 4567' },
+  emergencyContactsExtra:[{ name:'Marco Marras', relationship:'relParent', phone:'+39 333 987 6543' }],
+  emergencyNotes:'Medico curante: Dott.ssa Rossi, +39 02 1234567. Nessuna direttiva anticipata registrata.',
+  insurance:{ company:'Allianz Travel', policy:'AT-88213-IT', phone:'+39 02 5822 5822' },
+  insuranceWallet:[{ company:'Europ Assistance', type:'Bagaglio', policy:'EA-4471', phone:'+39 800 123456', validUntil:'2026-12-31' }],
+  familyMembers:[{ id:'FAM-SARA', name:'Sara Marras', relationship:'relChild', bloodType:'A+', allergies:[], allergiesCustom:[], conditions:[], conditionsCustom:[], medications:[], medicationsCustom:[], contactName:'Mattia Marras', contactPhone:'+39 333 123 4567' }],
+  documents:[],
+};
+let state = {
+  profile: null,
+  ui:{ view:'onboarding', lang:'it', travelCountry:null, emergencyOpen:false, emergencyLang:'it', extracting:false, extracted:null, plan:'free', emergencyMemberId:null, docGuideOpen:true, famDraft: blankFamDraft() },
+};
+const MAX_FREE_DOCS = 5;
+function isPro(){ return state.ui.plan === 'pro'; }
+/* Languages available on the Free plan for a given "viewer" context: the user's own
+   app language plus English as universal medical bridge language. Everything else
+   (the doctor's native language) is a PRO feature. */
+function freeLangsFor(lang){ return Array.from(new Set([lang, 'en'])); }
+function isLangFree(lang, baseLang){ return isPro() || freeLangsFor(baseLang).includes(lang); }
+function migrateLegacyMedications(p){
+  // Pre-v5.7 profiles stored medications as free-text {name, dosage}. New shape uses a
+  // controlled vocabulary {key, dosage} + a separate medicationsCustom list for anything
+  // not in VOCAB.medications. Move any legacy free-text entries over on load so old saved
+  // profiles don't break and don't silently lose data.
+  if(!Array.isArray(p.medications)) { p.medications = []; }
+  if(!Array.isArray(p.medicationsCustom)) { p.medicationsCustom = []; }
+  const kept = [];
+  p.medications.forEach(m=>{
+    if(m && typeof m === 'object' && !('key' in m) && 'name' in m){
+      p.medicationsCustom.push({ id: uid('MED'), text: m.name, dosage: m.dosage || '' });
+    } else if(m && m.key){
+      kept.push(m);
+    }
+  });
+  p.medications = kept;
+}
+function migrateLegacyFamilyMembers(p){
+  // Pre-v5.19 profiles stored each family member's allergies/conditions/medications as a
+  // single free-text field (allergiesText/conditionsText/medicationsText). New shape
+  // mirrors the main profile: a controlled-vocabulary array + a separate Custom array.
+  // Move any legacy text over into the Custom list on load so old saved profiles don't
+  // break and don't silently lose data.
+  if(!Array.isArray(p.familyMembers)) { p.familyMembers = []; }
+  p.familyMembers.forEach(f=>{
+    if(!Array.isArray(f.allergies)){
+      f.allergies = [];
+      f.allergiesCustom = f.allergiesText ? [{ id: uid('AL'), text: f.allergiesText }] : [];
+    }
+    if(!Array.isArray(f.conditions)){
+      f.conditions = [];
+      f.conditionsCustom = f.conditionsText ? [{ id: uid('CD'), text: f.conditionsText }] : [];
+    }
+    if(!Array.isArray(f.medications)){
+      f.medications = [];
+      f.medicationsCustom = f.medicationsText ? [{ id: uid('MED'), text: f.medicationsText, dosage: '' }] : [];
+    }
+    delete f.allergiesText; delete f.conditionsText; delete f.medicationsText;
+  });
+}
+function load(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      state.profile = parsed.profile ? Object.assign(blankProfile(), parsed.profile) : null;
+      if(state.profile) { migrateLegacyMedications(state.profile); migrateLegacyFamilyMembers(state.profile); }
+      state.ui.plan = parsed.plan || 'free';
+      state.ui.lang = parsed.lang || 'it';
+      state.ui.travelCountry = parsed.travelCountry || null;
+      if(state.profile) state.ui.view = 'home';
+    }
+  }catch(e){ /* storage unavailable — continue with in-memory defaults */ }
+}
+function persist(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ profile: state.profile, lang: state.ui.lang, travelCountry: state.ui.travelCountry, plan: state.ui.plan }));
+  }catch(e){ /* best effort only */ }
+}
+function setPlan(p){ state.ui.plan = p; persist(); render(); toast(p==='pro'? t('proActiveBadge') : t('free')); }
+let toastTimer=null;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove('show'), 1800);
+}
+function go(view){ state.ui.view = view; persist(); render(); window.scrollTo(0,0); }
+function setLang(l){ state.ui.lang = l; persist(); render(); }
+function update(fn){ fn(state.profile); persist(); render(); toastSave(); }
+let saveFlagTimer=null;
+function toastSave(){}
+
+/* ============ DEMO DOCUMENT EXTRACTION (simulated) ============ */
+const DEMO_DOC_SOURCE = {
+  filename:'referto_pronto_soccorso.pdf',
+  extractedFields:[
+    { key:'allergy', vocabList:'allergies', vocabId:'penicillin', sourceText:'Allergia alla penicillina, riferita dal paziente.' },
+    { key:'condition', vocabList:'conditions', vocabId:'asthma', sourceText:'Anamnesi positiva per asma bronchiale.' },
+    { key:'medication', name:'Salbutamolo (inalatore)', dosage:'Al bisogno', sourceText:'Terapia domiciliare: salbutamolo spray al bisogno.' },
+  ],
+};
+
+/* ============ RENDER: SHELL + ROUTER ============ */
+const NAV_ITEMS = () => [
+  {id:'home', icon:'🏠', label:t('navHome')},
+  {id:'profile', icon:'🩺', label:t('navProfile')},
+  {id:'documents', icon:'📄', label:t('navDocuments')},
+  {id:'travel', icon:'✈️', label:t('navTravel')},
+  {id:'plans', icon:'💳', label:t('navPlans')},
+];
+function esc(s){ return (s==null?'':String(s)).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function render(){
+  const root = document.getElementById('root');
+  if(!state.profile){
+    root.innerHTML = renderOnboarding();
+    bindOnboarding();
+    return;
+  }
+  root.innerHTML = renderShell();
+  document.getElementById('view').innerHTML = renderView();
+  bindShell();
+  bindView();
+  const overlay = document.getElementById('emergency-overlay');
+  if(state.ui.emergencyOpen && overlay){
+    overlay.style.display='block';
+    overlay.innerHTML = renderEmergencyOverlay();
+    bindEmergency();
+  }
+}
+function openEmergency(){
+  state.ui.emergencyOpen = true;
+  const travel = COUNTRIES.find(c=>c.code===state.ui.travelCountry);
+  const destLang = travel ? travel.lang : null;
+  state.ui.emergencyLang = (destLang && isLangFree(destLang, state.ui.lang)) ? destLang : state.ui.lang;
+  state.ui.emergencyMemberId = null;
+  render();
+}
+function closeEmergency(){ state.ui.emergencyOpen = false; render(); }
+function emergencySubject(){
+  if(!state.ui.emergencyMemberId) return state.profile;
+  const f = state.profile.familyMembers.find(m=>m.id===state.ui.emergencyMemberId);
+  if(!f) return state.profile;
+  return {
+    id: f.id, name: f.name, nationality: state.profile.nationality, bloodType: f.bloodType,
+    allergies: f.allergies, allergiesCustom: f.allergiesCustom,
+    conditions: f.conditions, conditionsCustom: f.conditionsCustom,
+    medications: f.medications, medicationsCustom: f.medicationsCustom,
+    surgeries: [],
+    emergencyContact: { name: f.contactName, phone: f.contactPhone, relationship: '' },
+    emergencyContactsExtra: [], emergencyNotes: '',
+    insurance: state.profile.insurance, insuranceWallet: [],
+  };
+}
+
+function renderShell(){
+  const items = NAV_ITEMS();
+  const sidebarLinks = items.map(i=>`<button class="navlink ${state.ui.view===i.id?'active':''}" data-nav="${i.id}"><span class="ic">${i.icon}</span>${esc(i.label)}</button>`).join('');
+  const bottomLinks = items.map(i=>`<button class="${state.ui.view===i.id?'active':''}" data-nav="${i.id}"><span class="ic">${i.icon}</span>${esc(i.label)}</button>`).join('');
+  const langOptions = LANGS.map(l=>`<option value="${l}" ${state.ui.lang===l?'selected':''}>${LANG_FLAGS[l]} ${esc(LANG_NAMES[l])}</option>`).join('');
+  return `
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">${BRAND_LOGO}</div>
+        <div><div class="brand-name">SunVibes<br/>Health ID</div></div>
+      </div>
+      <nav class="navgroup">${sidebarLinks}</nav>
+      <div class="sidebar-foot">
+        <button class="sos-btn" data-open-emergency="1">🆘 ${esc(t('emergencyBtn'))}</button>
+        <div class="sidebar-mini">${esc(state.profile.name || '')} · <button data-nav="settings">${esc(t('settings'))}</button> · <button data-nav="plans" style="font-weight:700; ${isPro()?'color:var(--accent-strong);':''}">${isPro()? '⭐ PRO' : esc(t('free'))}</button></div>
+        <div class="sidebar-mini" style="margin-top:4px;">Powered by <a href="https://sunvibestechsolutions.com" target="_blank" rel="noopener" style="color:rgba(243,239,227,.6);">sunvibestechsolutions.com</a></div>
+      </div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div>
+          <div class="topbar-title">${esc(viewTitle())}</div>
+          <div class="topbar-sub">${esc(t('tagline'))}</div>
+        </div>
+        <div class="row" style="gap:8px; flex-wrap:wrap;">
+          <select class="lang-select" id="topbar-lang-select" title="${esc(t('preferredLang'))}" aria-label="${esc(t('preferredLang'))}">${langOptions}</select>
+          <button class="btn btn-ghost btn-sm topbar-settings" data-nav="settings" title="${esc(t('settings'))}" aria-label="${esc(t('settings'))}">⚙️</button>
+        </div>
+      </div>
+      <div class="view" id="view" dir="${state.ui.lang==='ar'?'rtl':'ltr'}"></div>
+    </div>
+    <nav class="bottombar">
+      ${bottomLinks}
+      <button class="emergency" data-open-emergency="1"><span class="ic">🆘</span>${esc(t('emergencyBtn').split(' ')[0])}</button>
+    </nav>
+  </div>
+  <div id="emergency-overlay" style="display:none;"></div>
+  `;
+}
+function viewTitle(){
+  const map = { home:t('home'), profile:t('navProfile'), documents:t('navDocuments'), travel:t('navTravel'), plans:t('navPlans'), settings:t('settings') };
+  return map[state.ui.view] || t('appName');
+}
+function bindShell(){
+  document.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click', ()=>go(b.dataset.nav)));
+  document.querySelectorAll('[data-setlang]').forEach(b=>b.addEventListener('click', ()=>setLang(b.dataset.setlang)));
+  const topbarLangSelect = document.getElementById('topbar-lang-select');
+  if(topbarLangSelect) topbarLangSelect.addEventListener('change', ()=>setLang(topbarLangSelect.value));
+  document.querySelectorAll('[data-open-emergency]').forEach(b=>b.addEventListener('click', openEmergency));
+  document.querySelectorAll('[data-go-plans]').forEach(b=>b.addEventListener('click', (e)=>{ e.preventDefault(); go('plans'); }));
+}
+function renderView(){
+  switch(state.ui.view){
+    case 'home': return renderHome();
+    case 'profile': return renderProfile();
+    case 'documents': return renderDocuments();
+    case 'travel': return renderTravel();
+    case 'plans': return renderPlans();
+    case 'settings': return renderSettings();
+    default: return renderHome();
+  }
+}
+function bindView(){
+  switch(state.ui.view){
+    case 'home': return bindHome();
+    case 'profile': return bindProfile();
+    case 'documents': return bindDocuments();
+    case 'travel': return bindTravel();
+    case 'plans': return bindPlans();
+    case 'settings': return bindSettings();
+  }
+}
+
+/* ============ VIEW: ONBOARDING ============ */
+function renderOnboarding(){
+  const countryOpts = COUNTRIES.map(c=>`<option value="${c.code}">${c.flag} ${esc(c.name.it)} / ${esc(c.name.en)}</option>`).join('');
+  const langPills = LANGS.map(l=>`<button type="button" class="lang-pill ${state.ui.lang===l?'active':''}" data-onb-lang="${l}" title="${esc(LANG_NAMES[l])}">${LANG_FLAGS[l]}</button>`).join('');
+  return `
+  <div style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;">
+    <div style="max-width:440px; width:100%;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:22px;">
+        <div class="brand-mark">${BRAND_LOGO}</div>
+        <div class="font-display" style="font-weight:600; font-size:1.15rem;">${esc(t('appName'))}</div>
+      </div>
+      <h1 class="font-display" style="font-size:1.7rem; font-weight:600; margin:0 0 6px;">${esc(t('welcomeTitle'))}</h1>
+      <p style="color:var(--text-soft); font-size:.92rem; margin:0 0 22px;">${esc(t('welcomeSub'))}</p>
+      <div class="card">
+        <div class="field">
+          <label>${esc(t('name'))}</label>
+          <input type="text" id="onb-name" placeholder="Mattia Marras" />
+        </div>
+        <div class="field">
+          <label>${esc(t('nationality'))}</label>
+          <select id="onb-nationality">${countryOpts}<option value="OTHER">${esc(t('otherNationality'))}</option></select>
+        </div>
+        <div class="field">
+          <label>${esc(t('preferredLang'))}</label>
+          <div class="lang-pills" style="width:fit-content;">${langPills}</div>
+        </div>
+        <button class="btn btn-primary btn-block" id="onb-create">${esc(t('createId'))}</button>
+        <button class="btn btn-ghost btn-block" id="onb-demo" style="margin-top:8px;">${esc(t('fillDemo'))}</button>
+      </div>
+      <p class="disclaimer" style="margin-top:16px;">${esc(t('disclaimerHome'))}</p>
+      <p class="hint" style="margin-top:8px; text-align:center;">Powered by <a href="https://sunvibestechsolutions.com" target="_blank" rel="noopener">sunvibestechsolutions.com</a></p>
+    </div>
+  </div>`;
+}
+function bindOnboarding(){
+  document.querySelectorAll('[data-onb-lang]').forEach(b=>b.addEventListener('click', ()=>{ state.ui.lang=b.dataset.onbLang; render(); }));
+  document.getElementById('onb-create').addEventListener('click', ()=>{
+    const name = document.getElementById('onb-name').value.trim();
+    const nat = document.getElementById('onb-nationality').value;
+    if(!name){ toast(t('enterYourNameToast')); return; }
+    state.profile = blankProfile();
+    state.profile.name = name; state.profile.nationality = nat;
+    go('home');
+  });
+  document.getElementById('onb-demo').addEventListener('click', ()=>{
+    state.profile = JSON.parse(JSON.stringify(DEMO_PROFILE));
+    state.profile.id = uid('SVH');
+    go('home');
+  });
+}
+
+/* ============ VIEW: HOME ============ */
+function profileCompleteness(p){
+  const checks = [ !!p.name, !!p.bloodType, (p.allergies.length+p.allergiesCustom.length)>0 || (p.conditions.length+p.conditionsCustom.length)>0,
+    !!(p.emergencyContact.name && p.emergencyContact.phone), !!(p.insurance.company && p.insurance.policy) ];
+  const filled = checks.filter(Boolean).length;
+  return Math.round(filled/checks.length*100);
+}
+function buildPreviewCardHTML(lang){
+  const p = state.profile;
+  const rows = [
+    [tLang('bloodType',lang), p.bloodType || '—'],
+    [tLang('allergies',lang), [...p.allergies.map(id=>vocabLabel('allergies',id,lang)), ...p.allergiesCustom.map(c=>c.text)].join(', ') || tLang('noAllergies',lang)],
+    [tLang('conditions',lang), [...p.conditions.map(id=>vocabLabel('conditions',id,lang)), ...p.conditionsCustom.map(c=>c.text)].join(', ') || tLang('none',lang)],
+  ];
+  return `<div class="card" style="background:var(--surface-2); box-shadow:none; margin-top:12px;">
+    <div class="row" style="justify-content:space-between; margin-bottom:2px;"><span class="badge">${LANG_NAMES[lang]}</span></div>` +
+    rows.map(r=>`<div class="list-item"><span class="hint">${esc(r[0])}</span><strong style="font-size:.88rem;">${esc(r[1])}</strong></div>`).join('') + `</div>`;
+}
+function renderHome(){
+  const p = state.profile;
+  const country = COUNTRIES.find(c=>c.code===p.nationality);
+  const pct = profileCompleteness(p);
+  const travel = COUNTRIES.find(c=>c.code===state.ui.travelCountry);
+  const previewLangs = LANGS.filter(l=>l!==state.ui.lang);
+  const defaultPreviewLang = travel ? travel.lang : (previewLangs[0] || 'en');
+  const previewLangOptions = previewLangs.map(l=>`<option value="${l}" ${l===defaultPreviewLang?'selected':''}>${LANG_FLAGS[l]} ${esc(LANG_NAMES[l])}</option>`).join('');
+  const previewBlock = `
+       <div class="row" style="gap:10px; align-items:center; flex-wrap:wrap;">
+         <select class="lang-select" id="home-preview-lang">${previewLangOptions}</select>
+         ${travel ? `<span class="hint">${travel.flag} ${esc(t('showIn'))} ${esc(countryName(travel))}</span>` : ''}
+       </div>
+       ${!travel ? `<p class="hint" style="margin-top:10px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">${esc(t('setTravelHint'))} <button class="btn btn-ghost btn-sm" data-nav="travel">✈️ ${esc(t('navTravel'))}</button></p>` : ''}
+       <div id="home-preview">${buildPreviewCardHTML(defaultPreviewLang)}</div>`;
+  return `
+    <div class="idcard">
+      <div class="idcard-top">
+        <div class="idcard-brand">${esc(t('appName'))}</div>
+        <div class="idcard-flag">${country?country.flag:'🌐'}</div>
+      </div>
+      <div class="idcard-name">${esc(p.name || '—')}</div>
+      <div class="idcard-id">${esc(t('memberSince'))}: ${esc(p.id)}</div>
+      <div class="idcard-meta">
+        <div><div>${esc(t('bloodType'))}</div><div>${esc(p.bloodType || '—')}</div></div>
+        <div><div>${esc(t('allergies'))}</div><div style="font-size:.85rem;">${(p.allergies.length+p.allergiesCustom.length) || t('none')}</div></div>
+      </div>
+      <button class="btn btn-emergency" style="margin-top:20px;" data-open-emergency="1">🆘 ${esc(t('showEmergency'))}</button>
+    </div>
+
+    <div class="stat-row" style="margin-top:18px;">
+      <div class="stat-box">
+        <div class="stat-num">${pct}%</div>
+        <div class="stat-label">${esc(t('profileCompleteness'))}</div>
+        <div class="progress-track" style="margin-top:8px;"><div class="progress-fill" style="width:${pct}%;"></div></div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">${p.documents.length}</div>
+        <div class="stat-label">${esc(t('documentsCount'))}</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" style="font-size:1.1rem;">${travel ? travel.flag+' '+countryName(travel) : esc(t('notSet'))}</div>
+        <div class="stat-label">${esc(t('travelStatus'))}</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <div class="section-head"><h2>${esc(t('quickPreview'))}</h2></div>
+      <p class="hint" style="margin:-6px 0 12px;">${esc(t('previewHint'))}</p>
+      ${previewBlock}
+    </div>
+
+    <p class="disclaimer" style="margin-top:18px;">${esc(t('disclaimerHome'))}</p>
+  `;
+}
+function bindHome(){
+  document.querySelectorAll('[data-open-emergency]').forEach(b=>b.addEventListener('click', openEmergency));
+  const previewSelect = document.getElementById('home-preview-lang');
+  if(previewSelect) previewSelect.addEventListener('change', ()=>{
+    document.getElementById('home-preview').innerHTML = buildPreviewCardHTML(previewSelect.value);
+  });
+}
+
+/* ============ shared: text-field auto-save without full re-render ============ */
+function flashSaved(){
+  const flag = document.getElementById('save-flag');
+  if(!flag) return;
+  flag.classList.add('show');
+  clearTimeout(flag._t);
+  flag._t = setTimeout(()=>flag.classList.remove('show'), 1200);
+}
+function bindText(id, setter){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.addEventListener('input', ()=>{ setter(el.value); persist(); flashSaved(); });
+}
+function bindDraftText(id, setter){
+  // Same idea as bindText, but for scratch/draft state (e.g. the "add family member"
+  // form) that isn't part of the saved profile yet — updates the value on every
+  // keystroke so it survives the re-renders triggered by chip clicks, without persisting
+  // to storage or flashing the "saved" indicator for something not saved yet (v5.19).
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.addEventListener('input', ()=>{ setter(el.value); });
+}
+
+const BLOOD_TYPES = ['A+','A-','B+','B-','AB+','AB-','O+','O-'];
+const RELATIONSHIPS = ['relSpouse','relParent','relChild','relSibling','relFriend','relOther'];
+
+/* ============ VIEW: HEALTH PROFILE ============ */
+function renderInsuranceWalletCard(p){
+  if(!isPro()){
+    return `
+    <div class="card">
+      <div class="section-head"><h2>${esc(t('insuranceWalletTitle'))}</h2><span class="badge badge-warn">${esc(t('proOnly'))}</span></div>
+      <p class="hint">${esc(t('insuranceWalletHint'))}</p>
+      <p class="hint" style="margin-top:8px;">🔒 ${esc(t('proLockMsg'))} <a href="#" data-go-plans="1" style="font-weight:700;">${esc(t('viewProPlan'))}</a></p>
+    </div>`;
+  }
+  const rows = p.insuranceWallet.map((w,i)=>`
+    <div class="list-item" style="align-items:flex-start;">
+      <div>
+        <div style="font-size:.86rem; font-weight:600;">${esc(w.company)}${w.type?` · ${esc(w.type)}`:''}</div>
+        <div class="hint">${esc(w.policy||'')}${w.phone?` · ${esc(w.phone)}`:''}</div>
+        ${w.validUntil?`<div class="hint">${esc(t('validUntil'))}: ${esc(w.validUntil)}</div>`:''}
+      </div>
+      <button class="btn btn-ghost btn-sm" data-rm-ins="${i}">${esc(t('remove'))}</button>
+    </div>`).join('') || `<div class="hint">${esc(t('none'))}</div>`;
+  return `
+    <div class="card">
+      <div class="section-head"><h2>${esc(t('insuranceWalletTitle'))}</h2></div>
+      <p class="hint" style="margin:-4px 0 12px;">${esc(t('insuranceWalletHint'))}</p>
+      ${rows}
+      <div class="grid2" style="margin-top:12px;">
+        <input type="text" id="iw-company" placeholder="${esc(t('insCompany'))}" style="background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:9px 11px;" />
+        <input type="text" id="iw-type" placeholder="${esc(t('policyType'))}" style="background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:9px 11px;" />
+        <input type="text" id="iw-policy" placeholder="${esc(t('insPolicy'))}" style="background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:9px 11px;" />
+        <input type="tel" id="iw-phone" placeholder="${esc(t('insPhone'))}" style="background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:9px 11px;" />
+        <input type="text" id="iw-valid" placeholder="${esc(t('validUntil'))}" style="background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:9px 11px;" />
+      </div>
+      <button class="btn btn-ghost btn-sm" id="iw-add" style="margin-top:10px;">${esc(t('addPolicy'))}</button>
+    </div>`;
+}
+function renderAdvancedEmergencyCard(p){
+  if(!isPro()){
+    return `
+    <div class="card">
+      <div class="section-head"><h2>${esc(t('advancedEmergencyTitle'))}</h2><span class="badge badge-warn">${esc(t('proOnly'))}</span></div>
+      <p class="hint" style="margin-top:8px;">🔒 ${esc(t('proLockMsg'))} <a href="#" data-go-plans="1" style="font-weight:700;">${esc(t('viewProPlan'))}</a></p>
+    </div>`;
+  }
+  const relOpts = RELATIONSHIPS.map(r=>`<option value="${r}">${esc(t(r))}</option>`).join('');
+  const rows = p.emergencyContactsExtra.map((c,i)=>`
+    <div class="list-item">
+      <span>${esc(c.name)} <span class="hint">(${esc(t(c.relationship))}) — ${esc(c.phone)}</span></span>
+      <button class="btn btn-ghost btn-sm" data-rm-ec="${i}">${esc(t('remove'))}</button>
+    </div>`).join('') || `<div class="hint">${esc(t('none'))}</div>`;
+  return `
+    <div class="card">
+      <div class="section-head"><h2>${esc(t('advancedEmergencyTitle'))}</h2></div>
+      <div style="font-size:.78rem; font-weight:700; color:var(--text-soft); text-transform:uppercase; letter-spacing:.03em; margin:4px 0;">${esc(t('extraContacts'))}</div>
+      ${rows}
+      <div class="grid2" style="margin-top:12px;">
+        <input type="text" id="ec2-name" placeholder="${esc(t('contactName'))}" style="background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:9px 11px;" />
+        <select id="ec2-rel" style="background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:9px 11px;">${relOpts}</select>
+      </div>
+      <input type="tel" id="ec2-phone" placeholder="${esc(t('phone'))}" style="width:100%; margin-top:8px; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:9px 11px;" />
+      <button class="btn btn-ghost btn-sm" id="ec2-add" style="margin-top:10px;">${esc(t('addContact'))}</button>
+      <div class="field" style="margin-top:16px;">
+        <label>${esc(t('emergencyNotesLabel'))}</label>
+        <textarea id="p-emg-notes" placeholder="${esc(t('emergencyNotesPlaceholder'))}">${esc(p.emergencyNotes)}</textarea>
+      </div>
+    </div>`;
+}
+function renderFamilyCard(p){
+  if(!isPro()){
+    return `
+    <div class="card">
+      <div class="section-head"><h2>${esc(t('familyTitle'))}</h2><span class="badge badge-warn">${esc(t('proOnly'))}</span></div>
+      <p class="hint">${esc(t('familyHint'))}</p>
+      <p class="hint" style="margin-top:8px;">🔒 ${esc(t('proLockMsg'))} <a href="#" data-go-plans="1" style="font-weight:700;">${esc(t('viewProPlan'))}</a></p>
+    </div>`;
+  }
+  const lang = state.ui.lang;
+  const fd = state.ui.famDraft;
+  const relOpts = RELATIONSHIPS.map(r=>`<option value="${r}" ${r===fd.relationship?'selected':''}>${esc(t(r))}</option>`).join('');
+  const bloodOpts2 = BLOOD_TYPES.map(b=>`<option value="${b}" ${b===fd.bloodType?'selected':''}>${b}</option>`).join('');
+  const rows = p.familyMembers.map(f=>{
+    const famAllergySummary = [...f.allergies.map(id=>vocabLabel('allergies',id,lang)), ...f.allergiesCustom.map(c=>c.text)].join(', ');
+    return `
+    <div class="list-item" style="align-items:flex-start;">
+      <div>
+        <div style="font-size:.86rem; font-weight:600;">${esc(f.name)} <span class="hint">(${esc(t(f.relationship))})</span></div>
+        <div class="hint">${esc(t('bloodType'))}: ${esc(f.bloodType||'—')}${famAllergySummary?` · ${esc(t('allergies'))}: ${esc(famAllergySummary)}`:''}</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" data-rm-fam="${f.id}">${esc(t('remove'))}</button>
+    </div>`;
+  }).join('') || `<div class="hint">${esc(t('none'))}</div>`;
+
+  // Stessi picker a vocabolario controllato della card Profilo (v5.19), ma su un draft
+  // separato (state.ui.famDraft) finché il nuovo familiare non viene aggiunto.
+  const famAllergyChips = VOCAB.allergies.map(v=>{
+    const sel = fd.allergies.includes(v.key);
+    return `<button type="button" class="chip ${sel?'selected':''}" data-fam-toggle="allergies" data-id="${v.key}">${esc(v[lang])}</button>`;
+  }).join('');
+  const famAllergyCustomChips = fd.allergiesCustom.map(c=>`<span class="chip selected">${esc(c.text)} <span class="badge badge-warn" style="margin-left:2px;">${esc(t('unverified'))}</span> <button class="chip-remove" data-fam-removecustom="allergiesCustom" data-cid="${c.id}">✕</button></span>`).join('');
+  const famConditionChips = VOCAB.conditions.map(v=>{
+    const sel = fd.conditions.includes(v.key);
+    return `<button type="button" class="chip ${sel?'selected':''}" data-fam-toggle="conditions" data-id="${v.key}">${esc(v[lang])}</button>`;
+  }).join('');
+  const famConditionCustomChips = fd.conditionsCustom.map(c=>`<span class="chip selected">${esc(c.text)} <span class="badge badge-warn" style="margin-left:2px;">${esc(t('unverified'))}</span> <button class="chip-remove" data-fam-removecustom="conditionsCustom" data-cid="${c.id}">✕</button></span>`).join('');
+  const famMedRows = [
+    ...fd.medications.map((m,i)=>`<div class="list-item"><span>${esc(vocabLabel('medications',m.key,lang))} <span class="hint">— ${esc(m.dosage||'')}</span></span><button class="btn btn-ghost btn-sm" data-fam-rm-med="${i}">${esc(t('remove'))}</button></div>`),
+    ...fd.medicationsCustom.map(m=>`<div class="list-item"><span>${esc(m.text)} <span class="badge badge-warn" style="margin-left:2px;">${esc(t('unverified'))}</span> <span class="hint">— ${esc(m.dosage||'')}</span></span><button class="btn btn-ghost btn-sm" data-fam-rm-medcustom="${m.id}">${esc(t('remove'))}</button></div>`),
+  ].join('') || `<div class="hint">${esc(t('none'))}</div>`;
+  const famMedOptions = VOCAB.medications.map(v=>`<option value="${v.key}">${esc(v[lang])}</option>`).join('');
+
+  return `
+    <div class="card">
+      <div class="section-head"><h2>${esc(t('familyTitle'))}</h2></div>
+      <p class="hint" style="margin:-4px 0 12px;">${esc(t('familyHint'))}</p>
+      ${rows}
+      <div class="card" style="background:var(--surface-2); box-shadow:none; margin-top:14px;">
+        <div class="grid2">
+          <input type="text" id="fam-name" value="${esc(fd.name)}" placeholder="${esc(t('name'))}" style="background:var(--surface); border:1px solid var(--line); border-radius:9px; padding:9px 11px;" />
+          <select id="fam-rel" style="background:var(--surface); border:1px solid var(--line); border-radius:9px; padding:9px 11px;">${relOpts}</select>
+          <select id="fam-blood" style="background:var(--surface); border:1px solid var(--line); border-radius:9px; padding:9px 11px;"><option value="" ${fd.bloodType?'':'selected'}>${esc(t('selectBloodType'))}</option>${bloodOpts2}</select>
+        </div>
+
+        <div style="margin-top:14px;">
+          <div class="section-head" style="margin-bottom:6px;"><h2 style="font-size:.86rem;">${esc(t('allergies'))}</h2><span class="badge">${esc(t('controlled'))}</span></div>
+          <div class="row">${famAllergyChips}${famAllergyCustomChips}</div>
+          <div class="row" style="margin-top:8px;">
+            <input type="text" id="fam-allergy-custom" placeholder="${esc(t('addCustomAllergy'))}" style="flex:1; min-width:160px; background:var(--surface); border:1px solid var(--line); border-radius:9px; padding:9px 11px;" />
+            <button class="btn btn-ghost btn-sm" id="fam-allergy-add">${esc(t('add'))}</button>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;">
+          <div class="section-head" style="margin-bottom:6px;"><h2 style="font-size:.86rem;">${esc(t('conditions'))}</h2><span class="badge">${esc(t('controlled'))}</span></div>
+          <div class="row">${famConditionChips}${famConditionCustomChips}</div>
+          <div class="row" style="margin-top:8px;">
+            <input type="text" id="fam-condition-custom" placeholder="${esc(t('addCustomCondition'))}" style="flex:1; min-width:160px; background:var(--surface); border:1px solid var(--line); border-radius:9px; padding:9px 11px;" />
+            <button class="btn btn-ghost btn-sm" id="fam-condition-add">${esc(t('add'))}</button>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;">
+          <div class="section-head" style="margin-bottom:6px;"><h2 style="font-size:.86rem;">${esc(t('medications'))}</h2><span class="badge">${esc(t('controlled'))}</span></div>
+          ${famMedRows}
+          <div class="grid2" style="margin-top:8px;">
+            <select id="fam-med-select" style="background:var(--surface); border:1px solid var(--line); border-radius:9px; padding:9px 11px;">
+              <option value="">${esc(t('selectMedication'))}</option>
+              ${famMedOptions}
+              <option value="__custom__">${esc(t('otherMedication'))}</option>
+            </select>
+            <input type="text" id="fam-med-dosage" placeholder="${esc(t('dosage'))}" style="background:var(--surface); border:1px solid var(--line); border-radius:9px; padding:9px 11px;" />
+          </div>
+          <input type="text" id="fam-med-custom-name" placeholder="${esc(t('medName'))}" style="display:none; margin-top:8px; width:100%; background:var(--surface); border:1px solid var(--line); border-radius:9px; padding:9px 11px;" />
+          <button class="btn btn-ghost btn-sm" id="fam-med-add" style="margin-top:8px;">${esc(t('addMedication'))}</button>
+        </div>
+
+        <div class="grid2" style="margin-top:16px;">
+          <input type="text" id="fam-contact-name" value="${esc(fd.contactName)}" placeholder="${esc(t('contactName'))}" style="background:var(--surface); border:1px solid var(--line); border-radius:9px; padding:9px 11px;" />
+          <input type="tel" id="fam-contact-phone" value="${esc(fd.contactPhone)}" placeholder="${esc(t('phone'))}" style="background:var(--surface); border:1px solid var(--line); border-radius:9px; padding:9px 11px;" />
+        </div>
+        <button class="btn btn-ghost btn-sm" id="fam-add" style="margin-top:12px;">${esc(t('addFamilyMember'))}</button>
+      </div>
+    </div>`;
+}
+function renderProfile(){
+  const p = state.profile;
+  const lang = state.ui.lang;
+  const bloodOpts = BLOOD_TYPES.map(b=>`<option value="${b}" ${p.bloodType===b?'selected':''}>${b}</option>`).join('');
+  const allergyChips = VOCAB.allergies.map(v=>{
+    const sel = p.allergies.includes(v.key);
+    return `<button type="button" class="chip ${sel?'selected':''}" data-toggle="allergies" data-id="${v.key}">${esc(v[lang])}</button>`;
+  }).join('');
+  const allergyCustomChips = p.allergiesCustom.map(c=>`<span class="chip selected">${esc(c.text)} <span class="badge badge-warn" style="margin-left:2px;">${esc(t('unverified'))}</span> <button class="chip-remove" data-removecustom="allergiesCustom" data-cid="${c.id}">✕</button></span>`).join('');
+  const conditionChips = VOCAB.conditions.map(v=>{
+    const sel = p.conditions.includes(v.key);
+    return `<button type="button" class="chip ${sel?'selected':''}" data-toggle="conditions" data-id="${v.key}">${esc(v[lang])}</button>`;
+  }).join('');
+  const conditionCustomChips = p.conditionsCustom.map(c=>`<span class="chip selected">${esc(c.text)} <span class="badge badge-warn" style="margin-left:2px;">${esc(t('unverified'))}</span> <button class="chip-remove" data-removecustom="conditionsCustom" data-cid="${c.id}">✕</button></span>`).join('');
+
+  const medRows = [
+    ...p.medications.map((m,i)=>`<div class="list-item"><span>${esc(vocabLabel('medications',m.key,lang))} <span class="hint">— ${esc(m.dosage||'')}</span></span><button class="btn btn-ghost btn-sm" data-rm-med="${i}">${esc(t('remove'))}</button></div>`),
+    ...p.medicationsCustom.map(m=>`<div class="list-item"><span>${esc(m.text)} <span class="badge badge-warn" style="margin-left:2px;">${esc(t('unverified'))}</span> <span class="hint">— ${esc(m.dosage||'')}</span></span><button class="btn btn-ghost btn-sm" data-rm-medcustom="${m.id}">${esc(t('remove'))}</button></div>`),
+  ].join('') || `<div class="hint">${esc(t('none'))}</div>`;
+  const medOptions = VOCAB.medications.map(v=>`<option value="${v.key}">${esc(v[lang])}</option>`).join('');
+  const surgRows = p.surgeries.map((s,i)=>`<div class="list-item"><span>${esc(s.desc)} <span class="hint">— ${esc(s.year||'')}</span></span><button class="btn btn-ghost btn-sm" data-rm-surg="${i}">${esc(t('remove'))}</button></div>`).join('') || `<div class="hint">${esc(t('none'))}</div>`;
+  const relOpts = RELATIONSHIPS.map(r=>`<option value="${r}" ${p.emergencyContact.relationship===r?'selected':''}>${esc(t(r))}</option>`).join('');
+
+  return `
+    <div class="row" style="justify-content:space-between; margin-bottom:2px;">
+      <span class="eyebrow">${esc(t('navProfile'))}</span>
+      <span class="saved-flag" id="save-flag">✓ ${esc(t('saved'))}</span>
+    </div>
+
+    <div class="card">
+      <div class="section-head"><h2>${esc(t('bloodType'))}</h2></div>
+      <select id="p-bloodtype" style="max-width:180px; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:10px 12px;">
+        <option value="">${esc(t('selectBloodType'))}</option>${bloodOpts}
+      </select>
+    </div>
+
+    <div class="card">
+      <div class="section-head"><h2>${esc(t('allergies'))}</h2><span class="badge">${esc(t('controlled'))}</span></div>
+      <div class="row">${allergyChips}${allergyCustomChips}</div>
+      <div class="row" style="margin-top:12px;">
+        <input type="text" id="p-allergy-custom" placeholder="${esc(t('addCustomAllergy'))}" style="flex:1; min-width:180px; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:9px 11px;" />
+        <button class="btn btn-ghost btn-sm" id="p-allergy-add">${esc(t('add'))}</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-head"><h2>${esc(t('conditions'))}</h2><span class="badge">${esc(t('controlled'))}</span></div>
+      <div class="row">${conditionChips}${conditionCustomChips}</div>
+      <div class="row" style="margin-top:12px;">
+        <input type="text" id="p-condition-custom" placeholder="${esc(t('addCustomCondition'))}" style="flex:1; min-width:180px; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:9px 11px;" />
+        <button class="btn btn-ghost btn-sm" id="p-condition-add">${esc(t('add'))}</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-head"><h2>${esc(t('medications'))}</h2><span class="badge">${esc(t('controlled'))}</span></div>
+      ${medRows}
+      <div class="grid2" style="margin-top:12px;">
+        <select id="p-med-select" style="background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:9px 11px;">
+          <option value="">${esc(t('selectMedication'))}</option>
+          ${medOptions}
+          <option value="__custom__">${esc(t('otherMedication'))}</option>
+        </select>
+        <input type="text" id="p-med-dosage" placeholder="${esc(t('dosage'))}" style="background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:9px 11px;" />
+      </div>
+      <input type="text" id="p-med-custom-name" placeholder="${esc(t('medName'))}" style="display:none; margin-top:8px; width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:9px 11px;" />
+      <button class="btn btn-ghost btn-sm" id="p-med-add" style="margin-top:10px;">${esc(t('addMedication'))}</button>
+    </div>
+
+    <div class="card">
+      <div class="section-head"><h2>${esc(t('surgeries'))}</h2></div>
+      ${surgRows}
+      <div class="grid2" style="margin-top:12px;">
+        <input type="text" id="p-surg-desc" placeholder="${esc(t('surgeryDesc'))}" style="background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:9px 11px;" />
+        <input type="text" id="p-surg-year" placeholder="${esc(t('surgeryYear'))}" style="background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:9px 11px;" />
+      </div>
+      <button class="btn btn-ghost btn-sm" id="p-surg-add" style="margin-top:10px;">${esc(t('addSurgery'))}</button>
+    </div>
+
+    <div class="card">
+      <div class="section-head"><h2>${esc(t('emergencyContact'))}</h2></div>
+      <div class="grid2">
+        <div class="field"><label>${esc(t('contactName'))}</label><input type="text" id="p-ec-name" value="${esc(p.emergencyContact.name)}" /></div>
+        <div class="field"><label>${esc(t('relationship'))}</label><select id="p-ec-rel">${relOpts}</select></div>
+      </div>
+      <div class="field"><label>${esc(t('phone'))}</label><input type="tel" id="p-ec-phone" value="${esc(p.emergencyContact.phone)}" /></div>
+    </div>
+
+    ${renderAdvancedEmergencyCard(p)}
+
+    <div class="card">
+      <div class="section-head"><h2>${esc(t('insurance'))}</h2></div>
+      <div class="grid2">
+        <div class="field"><label>${esc(t('insCompany'))}</label><input type="text" id="p-ins-company" value="${esc(p.insurance.company)}" /></div>
+        <div class="field"><label>${esc(t('insPolicy'))}</label><input type="text" id="p-ins-policy" value="${esc(p.insurance.policy)}" /></div>
+      </div>
+      <div class="field"><label>${esc(t('insPhone'))}</label><input type="tel" id="p-ins-phone" value="${esc(p.insurance.phone)}" /></div>
+    </div>
+
+    ${renderInsuranceWalletCard(p)}
+
+    ${renderFamilyCard(p)}
+  `;
+}
+function bindProfile(){
+  const p = state.profile;
+  const bt = document.getElementById('p-bloodtype');
+  bt.addEventListener('change', ()=>{ p.bloodType = bt.value; persist(); flashSaved(); });
+
+  document.querySelectorAll('[data-toggle]').forEach(b=>b.addEventListener('click', ()=>{
+    const listName = b.dataset.toggle, id = b.dataset.id;
+    const arr = p[listName];
+    const i = arr.indexOf(id);
+    if(i>=0) arr.splice(i,1); else arr.push(id);
+    persist(); render();
+  }));
+  document.querySelectorAll('[data-removecustom]').forEach(b=>b.addEventListener('click', ()=>{
+    const listName = b.dataset.removecustom, cid = b.dataset.cid;
+    p[listName] = p[listName].filter(c=>c.id!==cid);
+    persist(); render();
+  }));
+  document.getElementById('p-allergy-add').addEventListener('click', ()=>{
+    const el = document.getElementById('p-allergy-custom'); const val = el.value.trim();
+    if(!val) return; p.allergiesCustom.push({id:uid('AL'), text:val}); persist(); render();
+  });
+  document.getElementById('p-condition-add').addEventListener('click', ()=>{
+    const el = document.getElementById('p-condition-custom'); const val = el.value.trim();
+    if(!val) return; p.conditionsCustom.push({id:uid('CD'), text:val}); persist(); render();
+  });
+  const medSelect = document.getElementById('p-med-select');
+  const medCustomInput = document.getElementById('p-med-custom-name');
+  if(medSelect) medSelect.addEventListener('change', ()=>{
+    medCustomInput.style.display = medSelect.value === '__custom__' ? '' : 'none';
+  });
+  document.getElementById('p-med-add').addEventListener('click', ()=>{
+    const dosage = document.getElementById('p-med-dosage').value.trim();
+    const selVal = medSelect.value;
+    if(selVal === '__custom__'){
+      const text = medCustomInput.value.trim();
+      if(!text) return;
+      p.medicationsCustom.push({ id: uid('MED'), text, dosage });
+    } else {
+      if(!selVal) return;
+      p.medications.push({ key: selVal, dosage });
+    }
+    persist(); render();
+  });
+  document.querySelectorAll('[data-rm-med]').forEach(b=>b.addEventListener('click', ()=>{ p.medications.splice(+b.dataset.rmMed,1); persist(); render(); }));
+  document.querySelectorAll('[data-rm-medcustom]').forEach(b=>b.addEventListener('click', ()=>{ p.medicationsCustom = p.medicationsCustom.filter(m=>m.id!==b.dataset.rmMedcustom); persist(); render(); }));
+  document.getElementById('p-surg-add').addEventListener('click', ()=>{
+    const desc = document.getElementById('p-surg-desc').value.trim();
+    const year = document.getElementById('p-surg-year').value.trim();
+    if(!desc) return; p.surgeries.push({desc, year}); persist(); render();
+  });
+  document.querySelectorAll('[data-rm-surg]').forEach(b=>b.addEventListener('click', ()=>{ p.surgeries.splice(+b.dataset.rmSurg,1); persist(); render(); }));
+
+  bindText('p-ec-name', v=>p.emergencyContact.name=v);
+  document.getElementById('p-ec-rel').addEventListener('change', e=>{ p.emergencyContact.relationship = e.target.value; persist(); flashSaved(); });
+  bindText('p-ec-phone', v=>p.emergencyContact.phone=v);
+  bindText('p-ins-company', v=>p.insurance.company=v);
+  bindText('p-ins-policy', v=>p.insurance.policy=v);
+  bindText('p-ins-phone', v=>p.insurance.phone=v);
+
+  /* Advanced emergency profile (PRO) */
+  bindText('p-emg-notes', v=>p.emergencyNotes=v);
+  const ec2Add = document.getElementById('ec2-add');
+  if(ec2Add) ec2Add.addEventListener('click', ()=>{
+    const name = document.getElementById('ec2-name').value.trim();
+    const relationship = document.getElementById('ec2-rel').value;
+    const phone = document.getElementById('ec2-phone').value.trim();
+    if(!name || !phone) return;
+    p.emergencyContactsExtra.push({ name, relationship, phone });
+    persist(); render();
+  });
+  document.querySelectorAll('[data-rm-ec]').forEach(b=>b.addEventListener('click', ()=>{
+    p.emergencyContactsExtra.splice(+b.dataset.rmEc,1); persist(); render();
+  }));
+
+  /* Insurance wallet (PRO) */
+  const iwAdd = document.getElementById('iw-add');
+  if(iwAdd) iwAdd.addEventListener('click', ()=>{
+    const company = document.getElementById('iw-company').value.trim();
+    if(!company) return;
+    const type = document.getElementById('iw-type').value.trim();
+    const policy = document.getElementById('iw-policy').value.trim();
+    const phone = document.getElementById('iw-phone').value.trim();
+    const validUntil = document.getElementById('iw-valid').value.trim();
+    p.insuranceWallet.push({ company, type, policy, phone, validUntil });
+    persist(); render();
+  });
+  document.querySelectorAll('[data-rm-ins]').forEach(b=>b.addEventListener('click', ()=>{
+    p.insuranceWallet.splice(+b.dataset.rmIns,1); persist(); render();
+  }));
+
+  /* Family profiles (PRO) — vocabolario controllato sul draft (v5.19), stesso pattern
+     dei picker allergie/patologie/farmaci del profilo principale, ma su state.ui.famDraft
+     finché il nuovo familiare non viene aggiunto (nessun persist() finché non si conferma). */
+  const fd = state.ui.famDraft;
+  bindDraftText('fam-name', v=>fd.name=v);
+  bindDraftText('fam-contact-name', v=>fd.contactName=v);
+  bindDraftText('fam-contact-phone', v=>fd.contactPhone=v);
+  const famRelSelect = document.getElementById('fam-rel');
+  if(famRelSelect) famRelSelect.addEventListener('change', ()=>{ fd.relationship = famRelSelect.value; });
+  const famBloodSelect = document.getElementById('fam-blood');
+  if(famBloodSelect) famBloodSelect.addEventListener('change', ()=>{ fd.bloodType = famBloodSelect.value; });
+  document.querySelectorAll('[data-fam-toggle]').forEach(b=>b.addEventListener('click', ()=>{
+    const listName = b.dataset.famToggle, id = b.dataset.id;
+    const arr = fd[listName];
+    const i = arr.indexOf(id);
+    if(i>=0) arr.splice(i,1); else arr.push(id);
+    render();
+  }));
+  document.querySelectorAll('[data-fam-removecustom]').forEach(b=>b.addEventListener('click', ()=>{
+    const listName = b.dataset.famRemovecustom, cid = b.dataset.cid;
+    fd[listName] = fd[listName].filter(c=>c.id!==cid);
+    render();
+  }));
+  const famAllergyAdd = document.getElementById('fam-allergy-add');
+  if(famAllergyAdd) famAllergyAdd.addEventListener('click', ()=>{
+    const el = document.getElementById('fam-allergy-custom'); const val = el.value.trim();
+    if(!val) return; fd.allergiesCustom.push({id:uid('AL'), text:val}); render();
+  });
+  const famConditionAdd = document.getElementById('fam-condition-add');
+  if(famConditionAdd) famConditionAdd.addEventListener('click', ()=>{
+    const el = document.getElementById('fam-condition-custom'); const val = el.value.trim();
+    if(!val) return; fd.conditionsCustom.push({id:uid('CD'), text:val}); render();
+  });
+  const famMedSelect = document.getElementById('fam-med-select');
+  const famMedCustomInput = document.getElementById('fam-med-custom-name');
+  if(famMedSelect) famMedSelect.addEventListener('change', ()=>{
+    famMedCustomInput.style.display = famMedSelect.value === '__custom__' ? '' : 'none';
+  });
+  const famMedAdd = document.getElementById('fam-med-add');
+  if(famMedAdd) famMedAdd.addEventListener('click', ()=>{
+    const dosage = document.getElementById('fam-med-dosage').value.trim();
+    const selVal = famMedSelect.value;
+    if(selVal === '__custom__'){
+      const text = famMedCustomInput.value.trim();
+      if(!text) return;
+      fd.medicationsCustom.push({ id: uid('MED'), text, dosage });
+    } else {
+      if(!selVal) return;
+      fd.medications.push({ key: selVal, dosage });
+    }
+    render();
+  });
+  document.querySelectorAll('[data-fam-rm-med]').forEach(b=>b.addEventListener('click', ()=>{ fd.medications.splice(+b.dataset.famRmMed,1); render(); }));
+  document.querySelectorAll('[data-fam-rm-medcustom]').forEach(b=>b.addEventListener('click', ()=>{ fd.medicationsCustom = fd.medicationsCustom.filter(m=>m.id!==b.dataset.famRmMedcustom); render(); }));
+
+  const famAdd = document.getElementById('fam-add');
+  if(famAdd) famAdd.addEventListener('click', ()=>{
+    const name = fd.name.trim();
+    if(!name) return;
+    const relationship = fd.relationship;
+    const bloodType = fd.bloodType;
+    const contactName = fd.contactName.trim();
+    const contactPhone = fd.contactPhone.trim();
+    p.familyMembers.push({
+      id: uid('FAM'), name, relationship, bloodType,
+      allergies: fd.allergies, allergiesCustom: fd.allergiesCustom,
+      conditions: fd.conditions, conditionsCustom: fd.conditionsCustom,
+      medications: fd.medications, medicationsCustom: fd.medicationsCustom,
+      contactName, contactPhone,
+    });
+    state.ui.famDraft = blankFamDraft();
+    persist(); render();
+  });
+  document.querySelectorAll('[data-rm-fam]').forEach(b=>b.addEventListener('click', ()=>{
+    p.familyMembers = p.familyMembers.filter(f=>f.id!==b.dataset.rmFam); persist(); render();
+  }));
+}
+
+/* ============ VIEW: DOCUMENTS ============ */
+function fmtBytes(n){ if(n<1024) return n+' B'; if(n<1024*1024) return (n/1024).toFixed(0)+' KB'; return (n/1024/1024).toFixed(1)+' MB'; }
+function renderDocuments(){
+  const p = state.profile;
+  const docRows = p.documents.map(d=>`
+    <div class="list-item">
+      <div class="row" style="gap:12px;">
+        ${d.thumb ? `<img src="${d.thumb}" style="width:38px;height:38px;object-fit:cover;border-radius:7px;border:1px solid var(--line);" />` : `<div style="width:38px;height:38px;border-radius:7px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;">📄</div>`}
+        <div><div style="font-size:.86rem; font-weight:600;">${esc(d.name)}</div><div class="hint">${fmtBytes(d.size)} · ${esc(d.date)}</div></div>
+      </div>
+      <button class="btn btn-ghost btn-sm" data-rm-doc="${d.id}">${esc(t('remove'))}</button>
+    </div>`).join('') || `<div class="empty"><div class="ic">📄</div>${esc(t('noDocs'))}</div>`;
+
+  const docLimitHit = !isPro() && p.documents.length >= MAX_FREE_DOCS;
+  let extractionBlock;
+  if(!isPro()){
+    extractionBlock = `
+      <p class="hint" style="margin:-4px 0 12px;">${esc(t('demoExtractionSub'))}</p>
+      <button class="btn btn-ghost" id="ai-org-locked">🔒 ${esc(t('aiOrgLockMsg'))}</button>
+      <p class="hint" style="margin-top:10px;"><a href="#" data-go-plans="1" style="font-weight:700;">${esc(t('viewProPlan'))}</a></p>`;
+  } else {
+  extractionBlock = `
+    <p class="hint" style="margin:-4px 0 12px;">${esc(t('demoExtractionSub'))}</p>
+    <button class="btn btn-primary" id="run-extraction" ${state.ui.extracting?'disabled':''}>${state.ui.extracting? '⏳ '+esc(t('extracting')) : '✨ '+esc(t('runDemo'))}</button>`;
+  if(state.ui.extracted){
+    const applied = state.ui.extractedApplied || [];
+    const rows = DEMO_DOC_SOURCE.extractedFields.map((f,i)=>{
+      const isApplied = applied.includes(i);
+      const label = f.key==='medication' ? `${f.name} — ${f.dosage}` : vocabLabel(f.vocabList, f.vocabId, state.ui.lang);
+      return `<div class="list-item" style="align-items:flex-start;">
+        <div>
+          <div style="font-size:.86rem; font-weight:600;">${esc(label)}</div>
+          <div class="hint" style="font-style:italic; margin-top:2px;">“${esc(f.sourceText)}”</div>
+        </div>
+        <button class="btn btn-sm ${isApplied?'btn-ghost':'btn-primary'}" data-apply-field="${i}" ${isApplied?'disabled':''}>${isApplied? '✓ '+esc(t('applied')) : esc(t('apply'))}</button>
+      </div>`;
+    }).join('');
+    extractionBlock += `
+      <div class="card" style="background:var(--surface-2); box-shadow:none; margin-top:14px;">
+        <div class="row" style="justify-content:space-between;">
+          <strong style="font-size:.86rem;">${esc(t('suggested'))}</strong>
+          <span class="badge badge-warn">${esc(t('demoLabel'))} · ${esc(DEMO_DOC_SOURCE.filename)}</span>
+        </div>
+        <div style="margin-top:8px;">${rows}</div>
+      </div>`;
+  }
+  }
+
+  const docGuideItems = [t('docGuideItem1'), t('docGuideItem2'), t('docGuideItem3'), t('docGuideItem4'), t('docGuideItem5')]
+    .map(i=>`<li>${esc(i)}</li>`).join('');
+  const docGuideBlock = state.ui.docGuideOpen ? `
+    <div class="card" style="background:var(--surface-2); box-shadow:none;">
+      <div class="section-head"><h2>📋 ${esc(t('docGuideTitle'))}</h2>${p.documents.length ? `<button class="btn btn-ghost btn-sm" id="doc-guide-hide" title="${esc(t('close'))}">✕</button>` : ''}</div>
+      <p class="hint" style="margin:-2px 0 10px;">${esc(t('docGuideIntro'))}</p>
+      <ul style="margin:0; padding-left:1.3em; display:flex; flex-direction:column; gap:8px; font-size:.88rem; line-height:1.4;">${docGuideItems}</ul>
+    </div>` : `
+    <button class="btn btn-ghost btn-sm" id="doc-guide-show" style="margin-bottom:2px;">${esc(t('docGuideToggle'))}</button>`;
+
+  return `
+    ${docGuideBlock}
+    <div class="card">
+      <div class="section-head"><h2>${esc(t('documents'))}</h2></div>
+      ${docRows}
+      <input type="file" id="doc-file-input" accept="image/*,.pdf" multiple style="display:none;" />
+      ${docLimitHit
+        ? `<p class="hint" style="margin-top:14px;">🔒 ${esc(t('docLimitMsg'))} <a href="#" data-go-plans="1" style="font-weight:700;">${esc(t('viewProPlan'))}</a></p>`
+        : `<button class="btn btn-ghost" id="doc-upload-btn" style="margin-top:14px;">📎 ${esc(t('uploadDoc'))}</button>`}
+    </div>
+    <div class="card">
+      <div class="section-head"><h2>🌍 ${esc(t('demoExtraction'))}</h2></div>
+      ${extractionBlock}
+    </div>
+  `;
+}
+function bindDocuments(){
+  const p = state.profile;
+  const guideShow = document.getElementById('doc-guide-show');
+  if(guideShow) guideShow.addEventListener('click', ()=>{ state.ui.docGuideOpen = true; render(); });
+  const guideHide = document.getElementById('doc-guide-hide');
+  if(guideHide) guideHide.addEventListener('click', ()=>{ state.ui.docGuideOpen = false; render(); });
+  const uploadBtn = document.getElementById('doc-upload-btn');
+  if(uploadBtn) uploadBtn.addEventListener('click', ()=>document.getElementById('doc-file-input').click());
+  document.getElementById('doc-file-input').addEventListener('change', (e)=>{
+    const files = Array.from(e.target.files || []);
+    let pending = files.length;
+    if(!pending) return;
+    let room = isPro() ? Infinity : Math.max(0, MAX_FREE_DOCS - p.documents.length);
+    files.forEach(file=>{
+      if(room <= 0){ pending--; if(pending===0){ persist(); render(); toast('🔒 '+t('docLimitMsg')); } return; }
+      room--;
+      const entry = { id: uid('DOC'), name:file.name, size:file.size, type:file.type, date:new Date().toLocaleDateString(state.ui.lang) };
+      const finish = ()=>{ p.documents.push(entry); pending--; if(pending===0){ state.ui.docGuideOpen = false; persist(); render(); } };
+      if(file.type.startsWith('image/') && file.size < 1.5*1024*1024){
+        const reader = new FileReader();
+        reader.onload = ()=>{ entry.thumb = reader.result; finish(); };
+        reader.onerror = finish;
+        reader.readAsDataURL(file);
+      } else { finish(); }
+    });
+  });
+  document.querySelectorAll('[data-rm-doc]').forEach(b=>b.addEventListener('click', ()=>{
+    p.documents = p.documents.filter(d=>d.id!==b.dataset.rmDoc); persist(); render();
+  }));
+  const aiLock = document.getElementById('ai-org-locked');
+  if(aiLock) aiLock.addEventListener('click', ()=>toast('🔒 '+t('aiOrgLockMsg')));
+  const runBtn = document.getElementById('run-extraction');
+  if(runBtn) runBtn.addEventListener('click', ()=>{
+    state.ui.extracting = true; state.ui.extracted = null; render();
+    setTimeout(()=>{ state.ui.extracting = false; state.ui.extracted = DEMO_DOC_SOURCE; state.ui.extractedApplied = []; render(); }, 1300);
+  });
+  document.querySelectorAll('[data-apply-field]').forEach(b=>b.addEventListener('click', ()=>{
+    const i = +b.dataset.applyField; const f = DEMO_DOC_SOURCE.extractedFields[i];
+    if(f.key==='allergy' && !p.allergies.includes(f.vocabId)) p.allergies.push(f.vocabId);
+    if(f.key==='condition' && !p.conditions.includes(f.vocabId)) p.conditions.push(f.vocabId);
+    if(f.key==='medication') p.medicationsCustom.push({id:uid('MED'), text:f.name, dosage:f.dosage});
+    state.ui.extractedApplied = [...(state.ui.extractedApplied||[]), i];
+    persist(); render(); toast(t('addedToProfileToast'));
+  }));
+}
+
+/* ============ VIEW: TRAVEL MODE ============ */
+function renderTravel(){
+  const p = state.profile;
+  const country = COUNTRIES.find(c=>c.code===state.ui.travelCountry);
+  const grid = COUNTRIES.map(c=>`
+    <button type="button" class="country-card ${state.ui.travelCountry===c.code?'active':''}" data-select-country="${c.code}">
+      <span class="flag">${c.flag}</span>
+      <span><span class="name">${esc(countryName(c))}</span><br/><span class="code">${c.code}</span></span>
+    </button>`).join('');
+
+  let details = '';
+  if(country){
+    const mapsQ = encodeURIComponent(`hospital in ${country.name.en}`);
+    const mapsQPharm = encodeURIComponent(`pharmacy in ${country.name.en}`);
+    const extrasLocked = !isPro();
+    const extrasBlock = extrasLocked ? `
+      <div class="list-item" style="opacity:.55;"><span class="hint">${esc(t('vaccinations'))}</span><span style="font-size:.8rem;">🔒 ${esc(t('proOnly'))}</span></div>
+      <div class="list-item" style="opacity:.55;"><span class="hint">${esc(t('embassyReminder'))}</span><span style="font-size:.8rem;">🔒 ${esc(t('proOnly'))}</span></div>
+      <div class="list-item" style="opacity:.55;"><span class="hint">${esc(t('insuranceReminder'))}</span><span style="font-size:.8rem;">🔒 ${esc(t('proOnly'))}</span></div>
+      <p class="hint" style="margin-top:8px;">🔒 ${esc(t('travelExtrasLockMsg'))} <a href="#" data-go-plans="1" style="font-weight:700;">${esc(t('viewProPlan'))}</a></p>
+    ` : `
+      <div class="list-item"><span class="hint">${esc(t('vaccinations'))}</span><span style="font-size:.86rem; max-width:280px; text-align:right;">${esc(country.vacc[state.ui.lang]||country.vacc.en)}</span></div>
+      ${country.risks && country.risks.length ? `
+      <div style="padding:10px 0; border-top:1px solid var(--border, #e5e1d8);">
+        <div class="hint" style="margin-bottom:6px;">${esc(t('healthRisksLabel'))}</div>
+        <ul style="margin:0; padding-left:18px; font-size:.86rem; line-height:1.5;">
+          ${country.risks.map(r=>`<li>${esc(r[state.ui.lang]||r.en)}</li>`).join('')}
+        </ul>
+      </div>` : ''}
+      <div class="list-item"><span class="hint">${esc(t('embassyReminder'))}</span><span style="font-size:.86rem;">${esc(t('embassyReminderText'))}</span></div>
+      <div class="list-item"><span class="hint">${esc(t('insuranceReminder'))}</span><span style="font-size:.86rem;">${esc(p.insurance.company) || t('notSet')}</span></div>
+    `;
+    const translateFree = isLangFree(country.lang, state.ui.lang);
+    const translateBtn = translateFree
+      ? `<button class="action-btn" data-translate-to="${country.lang}"><span class="ic">🌐</span><span class="lbl">${esc(t('translateInfo'))}</span></button>`
+      : `<button class="action-btn" data-locked-translate="1"><span class="ic">🔒</span><span class="lbl">${esc(t('translateInfo'))}</span></button>`;
+    details = `
+    <div class="card">
+      <div class="section-head"><h2>${country.flag} ${esc(t('beforeTravel'))} — ${esc(countryName(country))}</h2></div>
+      <div class="list-item"><span class="hint">${esc(t('emergencyNumbers'))}</span>
+        <strong class="mono">${country.emergency.map(e=>e.k).join(' · ')}</strong></div>
+      ${extrasBlock}
+      <p class="disclaimer" style="margin-top:12px;">${esc(t('demoContentNote'))}</p>
+    </div>
+    <div class="card">
+      <div class="section-head"><h2>${esc(t('whileAbroad'))}</h2></div>
+      <div class="action-grid">
+        <button class="action-btn emergency" data-open-emergency="1"><span class="ic">🆘</span><span class="lbl">${esc(t('emergencyBtn'))}</span></button>
+        <a class="action-btn" href="https://www.google.com/maps/search/${mapsQ}" target="_blank" rel="noopener"><span class="ic">🏥</span><span class="lbl">${esc(t('findHospital'))}</span></a>
+        <a class="action-btn" href="https://www.google.com/maps/search/${mapsQPharm}" target="_blank" rel="noopener"><span class="ic">💊</span><span class="lbl">${esc(t('findPharmacy'))}</span></a>
+        <button class="action-btn" data-open-emergency="1"><span class="ic">🪪</span><span class="lbl">${esc(t('showMedicalId'))}</span></button>
+        ${p.insurance.phone ? `<a class="action-btn" href="tel:${esc(p.insurance.phone.replace(/\\s/g,''))}"><span class="ic">📞</span><span class="lbl">${esc(t('callInsurance'))}</span></a>` : `<button class="action-btn" disabled style="opacity:.5;"><span class="ic">📞</span><span class="lbl">${esc(t('callInsurance'))}</span></button>`}
+        ${translateBtn}
+      </div>
+    </div>`;
+  }
+  return `
+    <div class="card">
+      <div class="section-head"><h2>${esc(t('selectDestination'))}</h2></div>
+      <div class="country-grid">${grid}</div>
+    </div>
+    ${details}
+  `;
+}
+function bindTravel(){
+  document.querySelectorAll('[data-select-country]').forEach(b=>b.addEventListener('click', ()=>{
+    state.ui.travelCountry = b.dataset.selectCountry; persist(); render();
+  }));
+  document.querySelectorAll('[data-open-emergency]').forEach(b=>b.addEventListener('click', openEmergency));
+  document.querySelectorAll('[data-translate-to]').forEach(b=>b.addEventListener('click', ()=>{
+    setLang(b.dataset.translateTo); go('profile');
+  }));
+  document.querySelectorAll('[data-locked-translate]').forEach(b=>b.addEventListener('click', ()=>{
+    toast('🔒 '+t('proLockMsg'));
+  }));
+}
+
+/* ============ VIEW: PLANS ============ */
+function renderPlans(){
+  const freeItems = I18N[state.ui.lang].planFreeItems || I18N.en.planFreeItems;
+  const proItems = I18N[state.ui.lang].planProItems || I18N.en.planProItems;
+  const pro = isPro();
+  return `
+    <div class="plans-grid">
+      <div class="plan-card">
+        <div class="eyebrow">${esc(t('free'))}</div>
+        <div class="plan-price">€0</div>
+        <ul class="plan-list">${freeItems.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>
+        ${!pro
+          ? `<div class="badge" style="margin-top:16px;">${esc(t('currentPlan'))}</div>`
+          : `<button class="btn btn-ghost btn-block" style="margin-top:16px;" id="plan-downgrade">${esc(t('downgradeCta'))}</button>`}
+      </div>
+      <div class="plan-card pro">
+        <div class="eyebrow">${esc(t('pro'))}</div>
+        <div class="plan-price">€29,99<span style="font-size:1rem; color:var(--text-soft);">${esc(t('perYear'))}</span></div>
+        <ul class="plan-list">${proItems.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>
+        ${pro
+          ? `<div class="badge" style="margin-top:16px;">${esc(t('proActiveBadge'))}</div>`
+          : `<button class="btn btn-primary btn-block" style="margin-top:16px;" id="plan-upgrade">${esc(t('upgradeCta'))}</button>`}
+      </div>
+    </div>
+    <p class="disclaimer" style="margin-top:16px;">${esc(t('pricingNote'))}</p>
+    <p class="hint" style="margin-top:8px;">Powered by <a href="https://sunvibestechsolutions.com" target="_blank" rel="noopener">sunvibestechsolutions.com</a></p>
+  `;
+}
+function bindPlans(){
+  const up = document.getElementById('plan-upgrade');
+  if(up) up.addEventListener('click', ()=>setPlan('pro'));
+  const down = document.getElementById('plan-downgrade');
+  if(down) down.addEventListener('click', ()=>setPlan('free'));
+}
+
+/* ============ VIEW: SETTINGS ============ */
+async function exportProfileFile(){
+  const payload = { schema:'ghid-backup-v1', exportedAt:new Date().toISOString(), profile:state.profile, lang:state.ui.lang, travelCountry:state.ui.travelCountry, plan:state.ui.plan };
+  const jsonStr = JSON.stringify(payload, null, 2);
+  const safeName = (state.profile.name||'profile').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') || 'profile';
+  const filename = `sunvibes-health-id-${safeName}-${new Date().toISOString().slice(0,10)}.json`;
+  // In the hosted Claude artifact viewer, page-initiated downloads are sandboxed and silently
+  // do nothing — the `downloads` capability is the supported way to hand the viewer a file there.
+  // Outside that viewer (e.g. a future real deployment as a plain website) that capability doesn't
+  // exist, so we fall back to a classic <a download> blob link, which works in a normal browser.
+  let downloadsApi = null;
+  try{
+    if(window.claude && typeof window.claude.use === 'function'){
+      downloadsApi = await window.claude.use('downloads');
+    }
+  }catch(e){ downloadsApi = null; }
+  if(downloadsApi){
+    try{ await downloadsApi.save({ filename, data: jsonStr }); return; }
+    catch(err){ if(err && err.code === 'declined') return; /* otherwise fall through to classic download */ }
+  }
+  const blob = new Blob([jsonStr], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+}
+function renderSettings(){
+  const p = state.profile;
+  const countryOpts = COUNTRIES.map(c=>`<option value="${c.code}" ${p.nationality===c.code?'selected':''}>${c.flag} ${esc(c.name.it)} / ${esc(c.name.en)}</option>`).join('');
+  const pending = state.ui.pendingImport;
+  const importConfirmBlock = pending ? `
+      <div class="card" style="background:var(--surface-2); box-shadow:none; margin-top:12px;">
+        <div style="font-size:.86rem;"><strong>${esc(t('importFoundLabel'))}</strong> ${esc(pending.profile && pending.profile.name || '—')}${pending.exportedAt ? ` <span class="hint">— ${esc(t('exportedOnLabel'))} ${esc(new Date(pending.exportedAt).toLocaleString(state.ui.lang))}</span>` : ''}</div>
+        <p class="hint" style="margin-top:8px;">${esc(t('importConfirmQuestion'))}</p>
+        <div class="row" style="gap:10px; margin-top:10px;">
+          <button class="btn btn-primary btn-sm" id="s-import-confirm">${esc(t('importConfirmBtn'))}</button>
+          <button class="btn btn-ghost btn-sm" id="s-import-cancel">${esc(t('importCancelBtn'))}</button>
+        </div>
+      </div>` : '';
+  return `
+    <div class="card">
+      <div class="section-head"><h2>${esc(t('name'))}</h2></div>
+      <input type="text" id="s-name" value="${esc(p.name)}" style="width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:10px 12px;" />
+    </div>
+    <div class="card">
+      <div class="section-head"><h2>${esc(t('nationality'))}</h2></div>
+      <select id="s-nationality" style="width:100%; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:10px 12px;">${countryOpts}</select>
+    </div>
+    <div class="card">
+      <div class="section-head"><h2>🔒 ${esc(t('privacyTitle'))}</h2></div>
+      <p class="hint">${esc(t('privacyBody'))}</p>
+    </div>
+    <div class="card">
+      <div class="section-head"><h2>${esc(t('backupTitle'))}</h2></div>
+      <p class="hint">${esc(t('backupHint'))}</p>
+      <div class="row" style="gap:10px; margin-top:10px; flex-wrap:wrap;">
+        <button class="btn btn-ghost btn-sm" id="s-export">⬇️ ${esc(t('exportProfile'))}</button>
+        <button class="btn btn-ghost btn-sm" id="s-import-btn">⬆️ ${esc(t('importProfile'))}</button>
+      </div>
+      <input type="file" id="s-import-file" accept="application/json,.json" style="display:none;" />
+      ${importConfirmBlock}
+    </div>
+    <div class="card">
+      <div class="section-head"><h2>${esc(t('resetDemo'))}</h2></div>
+      <p class="hint">${esc(t('resetDemoHint'))}</p>
+      <button class="btn btn-emergency btn-sm" id="s-reset">${esc(t('resetDemo'))}</button>
+    </div>
+    <div class="card">
+      <div class="section-head"><h2>${esc(t('appName'))}</h2></div>
+      <p class="hint">Powered by <a href="https://sunvibestechsolutions.com" target="_blank" rel="noopener">sunvibestechsolutions.com</a></p>
+    </div>
+  `;
+}
+function bindSettings(){
+  bindText('s-name', v=>state.profile.name=v);
+  document.getElementById('s-nationality').addEventListener('change', e=>{ state.profile.nationality = e.target.value; persist(); flashSaved(); render(); });
+  document.getElementById('s-reset').addEventListener('click', ()=>{
+    try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+    state.profile = null; state.ui.view='onboarding'; state.ui.travelCountry=null;
+    render();
+  });
+  document.getElementById('s-export').addEventListener('click', exportProfileFile);
+  document.getElementById('s-import-btn').addEventListener('click', ()=>document.getElementById('s-import-file').click());
+  document.getElementById('s-import-file').addEventListener('change', (e)=>{
+    const file = e.target.files && e.target.files[0];
+    e.target.value = '';
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      try{
+        const parsed = JSON.parse(reader.result);
+        if(!parsed || typeof parsed !== 'object' || !parsed.profile || typeof parsed.profile !== 'object') throw new Error('invalid');
+        state.ui.pendingImport = parsed;
+        render();
+      }catch(err){ toast('⚠️ '+t('importInvalidToast')); }
+    };
+    reader.onerror = ()=>toast('⚠️ '+t('importInvalidToast'));
+    reader.readAsText(file);
+  });
+  const importConfirm = document.getElementById('s-import-confirm');
+  if(importConfirm) importConfirm.addEventListener('click', ()=>{
+    const pending = state.ui.pendingImport;
+    if(!pending) return;
+    state.profile = Object.assign(blankProfile(), pending.profile);
+    migrateLegacyMedications(state.profile);
+    if(pending.lang) state.ui.lang = pending.lang;
+    if('travelCountry' in pending) state.ui.travelCountry = pending.travelCountry;
+    if(pending.plan) state.ui.plan = pending.plan;
+    state.ui.pendingImport = null;
+    persist(); render(); toast(t('importSuccessToast'));
+  });
+  const importCancel = document.getElementById('s-import-cancel');
+  if(importCancel) importCancel.addEventListener('click', ()=>{ state.ui.pendingImport = null; render(); });
+}
+
+/* ============ EMERGENCY OVERLAY ============ */
+function tE(key){ return tLang(key, state.ui.emergencyLang); }
+function buildEmergencySummary(lang){
+  const p = emergencySubject();
+  const country = COUNTRIES.find(c=>c.code===p.nationality);
+  const allergyText = [...p.allergies.map(id=>vocabLabel('allergies',id,lang)), ...p.allergiesCustom.map(c=>c.text)].join('; ') || (I18N[lang].noAllergies);
+  const condText = [...p.conditions.map(id=>vocabLabel('conditions',id,lang)), ...p.conditionsCustom.map(c=>c.text)].join('; ') || I18N[lang].none;
+  const medText = [...p.medications.map(m=>`${vocabLabel('medications',m.key,lang)} (${m.dosage||'-'})`), ...p.medicationsCustom.map(m=>`${m.text} (${m.dosage||'-'})`)].join('; ') || I18N[lang].none;
+  const surgText = p.surgeries.map(s=>`${s.desc} (${s.year||'-'})`).join('; ') || I18N[lang].none;
+  const lines = [
+    `GLOBAL HEALTH ID`,
+    `${I18N[lang].name}: ${p.name}`,
+    `${I18N[lang].nationality}: ${country?country.name[lang]||country.name.en:p.nationality}`,
+    `${I18N[lang].bloodType}: ${p.bloodType||'-'}`,
+    `${I18N[lang].allergies}: ${allergyText}`,
+    `${I18N[lang].conditions}: ${condText}`,
+    `${I18N[lang].medications}: ${medText}`,
+    `${I18N[lang].surgeries}: ${surgText}`,
+    `${I18N[lang].emergencyContact}: ${p.emergencyContact.name||'-'} (${p.emergencyContact.phone||'-'})`,
+    `${I18N[lang].insurance}: ${p.insurance.company||'-'} / ${p.insurance.policy||'-'} / ${p.insurance.phone||'-'}`,
+  ];
+  if(p.emergencyContactsExtra && p.emergencyContactsExtra.length){
+    lines.push(`${I18N[lang].extraContacts}: ` + p.emergencyContactsExtra.map(c=>`${c.name} (${c.phone})`).join('; '));
+  }
+  if(p.emergencyNotes){
+    lines.push(`${I18N[lang].emergencyNotesLabel}: ${p.emergencyNotes}`);
+  }
+  return lines.join('\n');
+}
+function truncateToBytes(str, maxBytes){
+  const enc = new TextEncoder();
+  if(enc.encode(str).length <= maxBytes) return str;
+  let lo = 0, hi = str.length;
+  while(lo < hi){
+    const mid = Math.ceil((lo+hi)/2);
+    if(enc.encode(str.slice(0,mid)).length <= maxBytes) lo = mid; else hi = mid-1;
+  }
+  return str.slice(0, lo);
+}
+/* Condensed, QR-capacity-safe version of the emergency summary: a full profile
+   (many allergies/conditions/meds/notes) can easily exceed what a QR code can
+   physically hold (byte-mode caps out around ~2.9KB even at the lowest error
+   correction / max size) — and dense codes above ~1KB get hard to scan with a
+   phone camera anyway. This keeps only the fields a first responder needs most
+   and hard-caps the byte length so QR generation never throws. */
+function buildEmergencyQrSummary(lang){
+  const p = emergencySubject();
+  const allergyText = [...p.allergies.map(id=>vocabLabel('allergies',id,lang)), ...p.allergiesCustom.map(c=>c.text)].join('; ') || (I18N[lang].noAllergies);
+  const condText = [...p.conditions.map(id=>vocabLabel('conditions',id,lang)), ...p.conditionsCustom.map(c=>c.text)].join('; ') || I18N[lang].none;
+  const medText = [...p.medications.map(m=>`${vocabLabel('medications',m.key,lang)} (${m.dosage||'-'})`), ...p.medicationsCustom.map(m=>`${m.text} (${m.dosage||'-'})`)].join('; ') || I18N[lang].none;
+  const lines = [
+    `GLOBAL HEALTH ID`,
+    `${I18N[lang].name}: ${p.name}`,
+    `${I18N[lang].bloodType}: ${p.bloodType||'-'}`,
+    `${I18N[lang].allergies}: ${allergyText}`,
+    `${I18N[lang].conditions}: ${condText}`,
+    `${I18N[lang].medications}: ${medText}`,
+    `${I18N[lang].emergencyContact}: ${p.emergencyContact.name||'-'} (${p.emergencyContact.phone||'-'})`,
+  ];
+  const MAX_BYTES = 700;
+  let text = lines.join('\n');
+  if(new TextEncoder().encode(text).length > MAX_BYTES){
+    text = truncateToBytes(text, MAX_BYTES - 1) + '…';
+  }
+  return text;
+}
+function renderEmergencyOverlay(){
+  const p = emergencySubject();
+  const lang = state.ui.emergencyLang;
+  const country = COUNTRIES.find(c=>c.code===p.nationality);
+  const homeLang = state.ui.lang;
+  const langBtns = LANGS.map(l=>{
+    const free = isLangFree(l, homeLang);
+    const cls = [lang===l?'active':'', free?'':'locked'].filter(Boolean).join(' ');
+    const label = free ? esc(LANG_NAMES[l]) : `${esc(LANG_NAMES[l])} — ${esc(tE('proLockMsg'))}`;
+    return `<button class="${cls}" data-elang="${l}" title="${label}">${free?'':'<span class=\"lockdot\">🔒</span>'}${LANG_FLAGS[l]}</button>`;
+  }).join('');
+  const allergyTags = [...p.allergies.map(id=>vocabLabel('allergies',id,lang)), ...p.allergiesCustom.map(c=>c.text)];
+  const condTags = [...p.conditions.map(id=>vocabLabel('conditions',id,lang)), ...p.conditionsCustom.map(c=>c.text)];
+  const memberSwitcher = (isPro() && state.profile.familyMembers.length) ? `
+    <div class="emergency-members">
+      <span class="hint" style="margin-right:6px;">${esc(tE('viewingLabel'))}:</span>
+      <button class="member-pill ${!state.ui.emergencyMemberId?'active':''}" data-emember="">${esc(tE('meLabel'))}</button>
+      ${state.profile.familyMembers.map(f=>`<button class="member-pill ${state.ui.emergencyMemberId===f.id?'active':''}" data-emember="${f.id}">${esc(f.name)}</button>`).join('')}
+    </div>` : '';
+  return `
+  <div class="emergency-screen">
+    <div class="emergency-topbar no-print">
+      <button class="emergency-close" id="e-close">← ${esc(tE('close'))}</button>
+      <div class="emergency-langs">${langBtns}</div>
+    </div>
+    <div class="no-print">${memberSwitcher}</div>
+    ${!isPro() ? `<p class="emergency-planhint no-print">🔒 ${esc(tE('proLockLangNote'))} <a href="#" id="e-view-pro">${esc(tE('viewProPlan'))}</a></p>` : ''}
+    <div class="emergency-body" dir="${lang==='ar'?'rtl':'ltr'}">
+      <div class="emergency-name">${esc(p.name || '—')}</div>
+      <div class="emergency-flagrow"><span>${country?country.flag:'🌐'}</span><span>${country ? esc(country.name[lang]||country.name.en) : ''}</span><span class="mono" style="margin-left:auto;">${esc(p.id)}</span></div>
+
+      <div class="ealert">
+        <div class="k">${esc(tE('bloodType'))}</div>
+        <div class="v">${esc(p.bloodType || '—')}</div>
+      </div>
+
+      <div class="eblock">
+        <div class="k">${esc(tE('allergies'))}</div>
+        <div class="v ${allergyTags.length?'':'empty'}">${allergyTags.length ? allergyTags.map(a=>`<span class="etag">${esc(a)}</span>`).join('') : esc(tE('noAllergies'))}</div>
+      </div>
+      <div class="eblock">
+        <div class="k">${esc(tE('medications'))}</div>
+        <div class="v ${(p.medications.length+p.medicationsCustom.length)?'':'empty'}">${(p.medications.length+p.medicationsCustom.length) ? [...p.medications.map(m=>esc(vocabLabel('medications',m.key,lang)+(m.dosage?' — '+m.dosage:''))), ...p.medicationsCustom.map(m=>esc(m.text+(m.dosage?' — '+m.dosage:'')))].join('<br/>') : esc(tE('none'))}</div>
+      </div>
+      <div class="eblock">
+        <div class="k">${esc(tE('conditions'))}</div>
+        <div class="v ${condTags.length?'':'empty'}">${condTags.length ? condTags.map(c=>`<span class="etag">${esc(c)}</span>`).join('') : esc(tE('none'))}</div>
+      </div>
+      <div class="eblock">
+        <div class="k">${esc(tE('surgeries'))}</div>
+        <div class="v ${p.surgeries.length?'':'empty'}">${p.surgeries.length ? p.surgeries.map(s=>esc(s.desc+(s.year?' ('+s.year+')':''))).join('<br/>') : esc(tE('none'))}</div>
+      </div>
+      <div class="eblock">
+        <div class="k">${esc(tE('emergencyContact'))}</div>
+        <div class="v ${p.emergencyContact.name?'':'empty'}">${p.emergencyContact.name ? esc(p.emergencyContact.name)+' ('+esc(tE(p.emergencyContact.relationship)||'')+')' : esc(tE('none'))}</div>
+        ${p.emergencyContact.phone ? `<a class="ecall" href="tel:${esc(p.emergencyContact.phone.replace(/\\s/g,''))}">📞 ${esc(p.emergencyContact.phone)}</a>` : ''}
+      </div>
+      <div class="eblock">
+        <div class="k">${esc(tE('insurance'))}</div>
+        <div class="v ${p.insurance.company?'':'empty'}">${p.insurance.company ? esc(p.insurance.company)+' · '+esc(p.insurance.policy||'') : esc(tE('none'))}</div>
+        ${p.insurance.phone ? `<a class="ecall" href="tel:${esc(p.insurance.phone.replace(/\\s/g,''))}">📞 ${esc(p.insurance.phone)}</a>` : ''}
+      </div>
+      ${p.emergencyContactsExtra && p.emergencyContactsExtra.length ? `
+      <div class="eblock">
+        <div class="k">${esc(tE('extraContacts'))}</div>
+        <div class="v">${p.emergencyContactsExtra.map(c=>`${esc(c.name)} (${esc(tE(c.relationship))}) — ${esc(c.phone)}`).join('<br/>')}</div>
+      </div>` : ''}
+      ${p.emergencyNotes ? `
+      <div class="eblock">
+        <div class="k">${esc(tE('emergencyNotesLabel'))}</div>
+        <div class="v">${esc(p.emergencyNotes)}</div>
+      </div>` : ''}
+
+      <div class="qr-wrap">
+        <div id="qrcanvas"></div>
+        <button class="btn btn-emergency btn-sm no-print" id="e-genqr">${esc(tE('generateQr'))}</button>
+        <p class="hint no-print" style="text-align:center; max-width:340px;">${esc(tE('qrHint'))}</p>
+        <p class="hint no-print" style="text-align:center; max-width:340px; opacity:.75;">💡 ${esc(tE('qrScanHint'))}</p>
+      </div>
+      <div class="print-actions no-print">
+        <button class="btn btn-sm" id="e-print">🖨️ ${esc(tE('printExport'))}</button>
+      </div>
+      <p class="disclaimer" style="margin-top:18px;">${esc(tE('emergencyDisclaimer'))}</p>
+      <p class="print-footer">${esc(tE('appName'))} — ${esc(tE('printedOn'))} ${new Date().toLocaleString(lang)}</p>
+    </div>
+  </div>`;
+}
+function bindEmergency(){
+  document.getElementById('e-close').addEventListener('click', closeEmergency);
+  document.querySelectorAll('[data-elang]').forEach(b=>b.addEventListener('click', ()=>{
+    const l = b.dataset.elang;
+    if(!isLangFree(l, state.ui.lang)){ toast('🔒 '+tE('proLockMsg')); return; }
+    state.ui.emergencyLang = l; render();
+  }));
+  const viewPro = document.getElementById('e-view-pro');
+  if(viewPro) viewPro.addEventListener('click', (e)=>{ e.preventDefault(); closeEmergency(); go('plans'); });
+  document.querySelectorAll('[data-emember]').forEach(b=>b.addEventListener('click', ()=>{
+    state.ui.emergencyMemberId = b.dataset.emember || null; render();
+  }));
+  const genBtn = document.getElementById('e-genqr');
+  const genQr = ()=>{
+    const box = document.getElementById('qrcanvas');
+    if(!box) return false;
+    box.innerHTML = '';
+    if(typeof QRCode === 'undefined'){ box.innerHTML = `<div class="hint">⚠️ ${esc(tE('qrUnavailable'))}</div>`; return false; }
+    try{
+      new QRCode(box, { text: buildEmergencyQrSummary(state.ui.emergencyLang), width:176, height:176, correctLevel: QRCode.CorrectLevel.L });
+      return true;
+    }catch(err){
+      box.innerHTML = `<div class="hint">⚠️ ${esc(tE('qrUnavailable'))}</div>`;
+      return false;
+    }
+  };
+  if(genBtn) genBtn.addEventListener('click', genQr);
+  const printBtn = document.getElementById('e-print');
+  if(printBtn) printBtn.addEventListener('click', ()=>{
+    const box = document.getElementById('qrcanvas');
+    if(box && !box.hasChildNodes()) genQr();
+    exportEmergencyPdf();
+  });
+}
+async function exportEmergencyPdf(){
+  const lang = state.ui.emergencyLang;
+  const p = emergencySubject();
+  const country = COUNTRIES.find(c=>c.code===p.nationality);
+  const safeName = (p.name||'id').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') || 'id';
+  const filename = `sunvibes-health-id-emergency-${safeName}-${lang}.pdf`;
+
+  const allergyItems = [...p.allergies.map(id=>vocabLabel('allergies',id,lang)), ...p.allergiesCustom.map(c=>c.text)];
+  const condItems = [...p.conditions.map(id=>vocabLabel('conditions',id,lang)), ...p.conditionsCustom.map(c=>c.text)];
+  const medItems = [...p.medications.map(m=>`${vocabLabel('medications',m.key,lang)} (${m.dosage||'-'})`), ...p.medicationsCustom.map(m=>`${m.text} (${m.dosage||'-'})`)];
+  const surgItems = p.surgeries.map(s=>`${s.desc} (${s.year||'-'})`);
+  const extraContactItems = (p.emergencyContactsExtra||[]).map(c=>`${c.name} — ${c.phone}`);
+
+  let pdfBlob = null;
+  try{
+    if(window.jspdf && window.jspdf.jsPDF){
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit:'pt', format:'a4' });
+      const margin = 40, maxWidth = 515, pageBottom = 780;
+      let y = margin;
+
+      const ensureSpace = (needed)=>{ if(y + needed > pageBottom){ doc.addPage(); y = margin; } };
+      const addLabelValue = (label, value, size)=>{
+        doc.setFont('helvetica','bold'); doc.setFontSize(size||11); doc.setTextColor(20,20,20);
+        const labelText = `${label}: `;
+        const labelWidth = doc.getTextWidth(labelText);
+        const valueLines = doc.splitTextToSize(value||'—', maxWidth - labelWidth);
+        ensureSpace(16 * valueLines.length);
+        doc.text(labelText, margin, y);
+        doc.setFont('helvetica','normal');
+        doc.text(valueLines[0]||'', margin + labelWidth, y); y += 16;
+        for(let i=1;i<valueLines.length;i++){ ensureSpace(16); doc.text(valueLines[i], margin, y); y += 16; }
+      };
+      const addSectionHeading = (text)=>{
+        ensureSpace(20); y += 4;
+        doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(90,90,90);
+        doc.text(String(text).toUpperCase(), margin, y); y += 14;
+      };
+      const addBulletList = (items, emptyText)=>{
+        doc.setFontSize(11);
+        if(!items.length){
+          ensureSpace(16);
+          doc.setFont('helvetica','normal'); doc.setTextColor(120,120,120);
+          doc.text(emptyText, margin + 14, y); y += 16;
+          return;
+        }
+        items.forEach(item=>{
+          const lines = doc.splitTextToSize(item, maxWidth - 14);
+          ensureSpace(16 * lines.length);
+          doc.setFont('helvetica','normal'); doc.setTextColor(20,20,20);
+          doc.text('•', margin, y);
+          doc.text(lines[0]||'', margin + 14, y); y += 16;
+          for(let i=1;i<lines.length;i++){ ensureSpace(16); doc.text(lines[i], margin + 14, y); y += 16; }
+        });
+      };
+
+      // Header
+      doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.setTextColor(20,20,20);
+      doc.text('GLOBAL HEALTH ID', margin, y); y += 22;
+      doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(120,120,120);
+      doc.text(`${tE('printedOn')} ${new Date().toLocaleString(lang)}`, margin, y); y += 20;
+
+      // Name / nationality / member id
+      doc.setFont('helvetica','bold'); doc.setFontSize(14); doc.setTextColor(20,20,20);
+      doc.text(p.name || '—', margin, y); y += 18;
+      doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(100,100,100);
+      doc.text(`${country ? (country.name[lang]||country.name.en) : ''}${p.id ? '   '+p.id : ''}`, margin, y); y += 20;
+
+      // Blood type — highlighted, matches the on-screen alert card
+      addLabelValue(I18N[lang].bloodType, p.bloodType || '—', 13);
+      y += 6;
+
+      addSectionHeading(I18N[lang].allergies);
+      addBulletList(allergyItems, I18N[lang].noAllergies);
+
+      addSectionHeading(I18N[lang].medications);
+      addBulletList(medItems, I18N[lang].none);
+
+      addSectionHeading(I18N[lang].conditions);
+      addBulletList(condItems, I18N[lang].none);
+
+      addSectionHeading(I18N[lang].surgeries);
+      addBulletList(surgItems, I18N[lang].none);
+
+      y += 6;
+      addLabelValue(I18N[lang].emergencyContact, `${p.emergencyContact.name||'-'} (${p.emergencyContact.phone||'-'})`);
+      if(extraContactItems.length){
+        addSectionHeading(I18N[lang].extraContacts);
+        addBulletList(extraContactItems, I18N[lang].none);
+      }
+      addLabelValue(I18N[lang].insurance, `${p.insurance.company||'-'} / ${p.insurance.policy||'-'} / ${p.insurance.phone||'-'}`);
+
+      if(p.emergencyNotes){
+        addSectionHeading(I18N[lang].emergencyNotesLabel);
+        doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(20,20,20);
+        doc.splitTextToSize(p.emergencyNotes, maxWidth).forEach(w=>{ ensureSpace(16); doc.text(w, margin, y); y += 16; });
+      }
+
+      pdfBlob = doc.output('blob');
+    }
+  }catch(err){ pdfBlob = null; }
+
+  if(!pdfBlob){
+    // jsPDF unavailable or failed to build the file — fall back to the browser's native print dialog
+    window.print();
+    return;
+  }
+
+  let downloadsApi = null;
+  try{
+    if(window.claude && typeof window.claude.use === 'function'){
+      downloadsApi = await window.claude.use('downloads');
+    }
+  }catch(e){ downloadsApi = null; }
+  if(downloadsApi){
+    try{ await downloadsApi.save({ filename, data: pdfBlob }); return; }
+    catch(err){ if(err && err.code === 'declined') return; /* otherwise fall through to classic download */ }
+  }
+  const url = URL.createObjectURL(pdfBlob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+}
+
+/* ============ INIT ============ */
+function init(){
+  load();
+  if(state.profile){ state.ui.view = state.ui.view==='onboarding' ? 'home' : state.ui.view; }
+  render();
+}
+async function bootstrap(){
+  try{
+    const [i18nData, travelData] = await Promise.all([
+      fetch('i18n.json').then(r=>r.json()),
+      fetch('travel-data.json').then(r=>r.json())
+    ]);
+    I18N = i18nData;
+    COUNTRIES = travelData;
+  }catch(e){
+    console.error('Errore nel caricamento dei dati', e);
+    document.getElementById('root').innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif;">Errore nel caricamento dei dati. Ricarica la pagina.</div>';
+    return;
+  }
+  init();
+}
+document.addEventListener('DOMContentLoaded', bootstrap);
+</script>
+
+</body></html>
